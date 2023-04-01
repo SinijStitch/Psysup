@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Psysup.BusinessLogic\Psysup.Domain.csproj" />
+    <ProjectReference Include="..\Psysup.Domain\Psysup.Domain.csproj" />
   </ItemGroup>
 
 </Project>

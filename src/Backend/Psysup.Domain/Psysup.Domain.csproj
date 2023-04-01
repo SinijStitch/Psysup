@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -7,13 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\NPsychology.DataAccess\Psysup.DataAccess.csproj" />
-    <ProjectReference Include="..\NPsyhology.DataContracts\Psysup.DataContracts.csproj" />
+    <ProjectReference Include="..\Psysup.DataAccess\Psysup.DataAccess.csproj" />
+    <ProjectReference Include="..\Psysup.DataContracts\Psysup.DataContracts.csproj" />
   </ItemGroup>
 
 </Project>
