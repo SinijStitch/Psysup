@@ -6,7 +6,9 @@ namespace Psysup.DataAccess.Data;
 
 public class PsysupDbContext : DbContext
 {
-    public PsysupDbContext(DbContextOptions<PsysupDbContext> options) : base(options) { }
+    public PsysupDbContext(DbContextOptions<PsysupDbContext> options) : base(options)
+    {
+    }
 
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
@@ -19,5 +21,6 @@ public class PsysupDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ApplicationEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
     }
 }

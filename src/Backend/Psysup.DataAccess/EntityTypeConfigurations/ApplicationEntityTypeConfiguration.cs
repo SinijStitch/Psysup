@@ -20,5 +20,9 @@ public class ApplicationEntityTypeConfiguration : IEntityTypeConfiguration<Appli
             .WithMany(x => x.Applications)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany(x => x.Categories)
+            .WithMany(x => x.Applications);
     }
 }
