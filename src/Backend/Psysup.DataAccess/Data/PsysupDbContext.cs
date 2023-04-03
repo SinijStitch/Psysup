@@ -2,23 +2,22 @@
 using Psysup.DataAccess.EntityTypeConfigurations;
 using Psysup.DataAccess.Models;
 
-namespace Psysup.DataAccess.Data
+namespace Psysup.DataAccess.Data;
+
+public class PsysupDbContext : DbContext
 {
-    public class PsysupDbContext : DbContext
+    public PsysupDbContext(DbContextOptions<PsysupDbContext> options) : base(options) { }
+
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Application> Applications { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public PsysupDbContext(DbContextOptions<PsysupDbContext> options) : base(options) { }
+        base.OnModelCreating(modelBuilder);
 
-        public DbSet<User> Users { get; set; } = null!;
-        public DbSet<Role> Roles { get; set; } = null!;
-        public DbSet<Application> Applications { get; set; } = null!;
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.ApplyConfiguration(new ApplicationEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
-        }
+        modelBuilder.ApplyConfiguration(new ApplicationEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
     }
 }
