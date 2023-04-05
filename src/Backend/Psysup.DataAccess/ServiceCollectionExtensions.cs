@@ -5,7 +5,7 @@ using Psysup.DataAccess.Data;
 
 namespace Psysup.DataAccess;
 
-public static class ServiceCollectionExtentions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
     {
@@ -13,6 +13,8 @@ public static class ServiceCollectionExtentions
         {
             options.UseSqlServer(configuration.GetConnectionString("Default"));
         });
+
+        services.AddScoped<IPsysupDbContext, PsysupDbContext>();
 
         return services;
     }

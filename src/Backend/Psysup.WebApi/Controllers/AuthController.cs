@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Psysup.DataContracts.Auth.Login;
-using Psysup.Domain.Exceptions.Auth;
+using Psysup.DataContracts.Auth.Register;
+using Psysup.Domain.Features.Auth.Commands.Login;
+using Psysup.Domain.Features.Auth.Commands.Register;
 
 namespace Psysup.WebApi.Controllers;
 
@@ -8,17 +12,28 @@ namespace Psysup.WebApi.Controllers;
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
-    [HttpPost("[action]")]
-    public async Task<IActionResult> LoginAsync(LoginRequest loginRequest)
-    {
-        if (string.IsNullOrEmpty(loginRequest.Email)) throw new IncorrectEmailOrPasswordException();
+    private readonly IMapper _mapper;
+    private readonly ISender _sender;
 
-        return Ok("Ok");
+    public AuthController(ISender sender, IMapper mapper)
+    {
+        _sender = sender;
+        _mapper = mapper;
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> RegisterAsync()
+    public async Task<IActionResult> LoginAsync(LoginRequest request)
     {
-        return Ok("asd");
+        var command = _mapper.Map<LoginCommand>(request);
+        var response = await _sender.Send(command);
+        return Ok(response);
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> RegisterAsync(RegisterRequest request)
+    {
+        var command = _mapper.Map<RegisterCommand>(request);
+        var response = await _sender.Send(command);
+        return Ok(response);
     }
 }

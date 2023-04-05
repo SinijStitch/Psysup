@@ -4,7 +4,7 @@ namespace Psysup.Domain.Exceptions.Auth;
 
 public class IncorrectEmailOrPasswordException : ValidationException
 {
-    private const string ErrorMessage = "Provided invalid email or password";
+    private const string ErrorMessage = "Provided invalid email or password.";
 
     public IncorrectEmailOrPasswordException() : base(ErrorMessage)
     {

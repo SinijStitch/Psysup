@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Psysup.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using Psysup.DataAccess.Data;
 namespace Psysup.DataAccess.Migrations
 {
     [DbContext(typeof(PsysupDbContext))]
-    partial class PsysupDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230405160343_Added-Default-Roles")]
+    partial class AddedDefaultRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

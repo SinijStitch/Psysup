@@ -4,7 +4,7 @@ using Psysup.DataAccess.Models;
 
 namespace Psysup.DataAccess.Data;
 
-public class PsysupDbContext : DbContext
+public class PsysupDbContext : DbContext, IPsysupDbContext
 {
     public PsysupDbContext(DbContextOptions<PsysupDbContext> options) : base(options)
     {

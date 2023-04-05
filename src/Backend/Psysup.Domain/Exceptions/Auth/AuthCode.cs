@@ -2,5 +2,6 @@
 
 public enum AuthCode
 {
-    IncorrectEmailOrPassword = 2000
+    IncorrectEmailOrPassword = 2000,
+    UserAlreadyExists = 2001
 }
