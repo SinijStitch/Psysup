@@ -1,8 +1,12 @@
+using System.Globalization;
 using System.Net;
 using Psysup.DataAccess;
 using Psysup.Domain;
 using Psysup.Domain.Constants;
 using Psysup.WebApi.Middlewares.Error;
+
+CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
 var builder = WebApplication.CreateBuilder(args);
 

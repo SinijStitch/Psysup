@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Psysup.DataContracts.Auth.Login;
 using Psysup.DataContracts.Auth.Register;
 using Psysup.Domain.Features.Auth.Commands.Login;
+using Psysup.Domain.Features.Auth.Commands.Logout;
 using Psysup.Domain.Features.Auth.Commands.Register;
 
 namespace Psysup.WebApi.Controllers;
@@ -35,5 +36,13 @@ public class AuthController : ControllerBase
         var command = _mapper.Map<RegisterCommand>(request);
         var response = await _sender.Send(command);
         return Ok(response);
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> LogoutAsync()
+    {
+        var command = new LogoutCommand();
+        await _sender.Send(command);
+        return Ok();
     }
 }

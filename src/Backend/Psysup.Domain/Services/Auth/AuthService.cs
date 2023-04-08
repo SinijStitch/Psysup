@@ -23,8 +23,12 @@ public class AuthService : IAuthService
         };
 
         if (user.Roles != null)
+        {
             foreach (var role in user.Roles)
+            {
                 claims.Add(new Claim("role", role.Name));
+            }
+        }
 
 
         var identity = new ClaimsIdentity(claims, CookieConstants.CookieScheme, "id", "role");

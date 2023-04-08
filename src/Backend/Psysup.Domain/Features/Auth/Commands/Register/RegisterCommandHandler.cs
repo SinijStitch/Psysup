@@ -32,19 +32,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
 
     public async Task<AuthResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var user = await _dbContext
-            .Users
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Email == request.Email, cancellationToken);
+        await ThrowIfUserExists(request, cancellationToken);
 
-        if (user != null) throw new UserAlreadyExistsException(request.Email);
-
-        var userRole = await _dbContext.Roles
-            .FirstAsync(x => x.Name == Roles.User.ToString(), cancellationToken);
-
-        var newUser = _mapper.Map<User>(request);
-        newUser.PasswordHash = _passwordHasher.HasPassword(request.Password);
-        newUser.Roles = new List<Role> { userRole };
+        var newUser = await CreateANewUser(request, cancellationToken);
 
         await _dbContext.Users.AddAsync(newUser, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -52,5 +42,30 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
         await _authService.SignInAsync(newUser);
 
         return _mapper.Map<AuthResponse>(newUser);
+    }
+
+    private async Task<User> CreateANewUser(RegisterCommand request, CancellationToken cancellationToken)
+    {
+        var userRole = await _dbContext.Roles.FirstAsync(x => x.Name == Roles.User.ToString(), cancellationToken);
+
+        var newUser = _mapper.Map<User>(request);
+
+        newUser.PasswordHash = _passwordHasher.HasPassword(request.Password);
+        newUser.Roles = new List<Role> { userRole };
+
+        return newUser;
+    }
+
+    private async Task ThrowIfUserExists(RegisterCommand request, CancellationToken cancellationToken)
+    {
+        var user = await _dbContext
+            .Users
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Email == request.Email, cancellationToken);
+
+        if (user != null)
+        {
+            throw new UserAlreadyExistsException(request.Email);
+        }
     }
 }
