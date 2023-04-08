@@ -4,44 +4,65 @@ using Psysup.DataAccess;
 using Psysup.Domain;
 using Psysup.Domain.Constants;
 using Psysup.WebApi.Middlewares.Error;
+using Serilog;
 
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
 CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration.
-builder.Services.AddDataAccess(builder.Configuration);
-builder.Services.AddDomain();
-builder.Services.AddControllers();
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
 
-builder.Services.AddHttpContextAccessor();
+try
+{
+    Log.Information("Starting web application");
 
-builder.Services
-    .AddAuthentication(CookieConstants.CookieScheme)
-    .AddCookie(CookieConstants.CookieScheme, options =>
-    {
-        options.Cookie.Name = CookieConstants.CookieName;
-        options.Events.OnRedirectToLogin = context =>
+    // Configuration.
+    builder.Host.UseSerilog();
+
+    builder.Services.AddDataAccess(builder.Configuration);
+    builder.Services.AddDomain();
+    builder.Services.AddControllers();
+
+    builder.Services.AddHttpContextAccessor();
+
+    builder.Services
+        .AddAuthentication(CookieConstants.CookieScheme)
+        .AddCookie(CookieConstants.CookieScheme, options =>
         {
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            return Task.CompletedTask;
-        };
-        options.Events.OnRedirectToAccessDenied = context =>
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-            return Task.CompletedTask;
-        };
-    });
+            options.Cookie.Name = CookieConstants.CookieName;
+            options.Events.OnRedirectToLogin = context =>
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                return Task.CompletedTask;
+            };
+            options.Events.OnRedirectToAccessDenied = context =>
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return Task.CompletedTask;
+            };
+        });
 
-var app = builder.Build();
+    var app = builder.Build();
 
-// Middleware
-app.UseErrorHandler();
+    // Middleware
+    app.UseErrorHandler();
 
-app.UseAuthentication();
-app.UseAuthorization();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-app.MapControllers();
+    app.MapControllers();
 
-app.Run();
+    app.Run();
+}
+catch (Exception exception)
+{
+    Log.Fatal(exception, "Application terminated unexpectedly");
+    throw;
+}
+finally
+{
+    Log.CloseAndFlush();
+}
