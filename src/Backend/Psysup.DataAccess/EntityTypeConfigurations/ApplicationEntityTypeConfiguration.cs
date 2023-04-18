@@ -23,6 +23,7 @@ public class ApplicationEntityTypeConfiguration : IEntityTypeConfiguration<Appli
 
         builder
             .HasMany(x => x.Categories)
-            .WithMany(x => x.Applications);
+            .WithMany(x => x.Applications)
+            .UsingEntity<ApplicationCategory>();
     }
 }

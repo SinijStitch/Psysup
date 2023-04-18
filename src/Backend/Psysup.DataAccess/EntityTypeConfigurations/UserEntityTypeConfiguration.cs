@@ -22,6 +22,19 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
 
         builder
             .HasMany(x => x.Roles)
-            .WithMany(x => x.Users);
+            .WithMany(x => x.Users)
+            .UsingEntity<RoleUser>()
+            .HasData(new RoleUser
+            {
+                UsersId = Guid.Parse("FDA48C05-48B8-4655-B1E5-F0D707568EE3"),
+                RolesId = Guid.Parse("86A8803F-569D-4F6E-9433-7DFCCBF79EC2")
+            });
+
+        builder.HasData(new User
+        {
+            Id = Guid.Parse("FDA48C05-48B8-4655-B1E5-F0D707568EE3"),
+            Email = "psysadmin@gmail.com",
+            PasswordHash = "$2b$10$u9qwtAmulUGnGH3fWiH3/ujpTuQYbOcJUj0EDvd/xYW8nueUjwdAK"
+        });
     }
 }

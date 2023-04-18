@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Psysup.DataContracts.Auth.Login;
 using Psysup.DataContracts.Auth.Register;
 using Psysup.Domain.Features.Auth.Commands.Login;
 using Psysup.Domain.Features.Auth.Commands.Logout;
 using Psysup.Domain.Features.Auth.Commands.Register;
+using Psysup.WebApi.Filters;
 
 namespace Psysup.WebApi.Controllers;
 
@@ -38,8 +38,8 @@ public class AuthController : ApiControllerBase
         return Ok(response);
     }
 
+    [PlatformAuthorize]
     [HttpPost("[action]")]
-    [Authorize]
     public async Task<IActionResult> LogoutAsync()
     {
         var command = new LogoutCommand();

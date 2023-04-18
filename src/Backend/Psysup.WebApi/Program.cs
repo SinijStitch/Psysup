@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Net;
+using Newtonsoft.Json;
 using Psysup.DataAccess;
 using Psysup.Domain;
 using Psysup.Domain.Constants;
@@ -24,7 +25,10 @@ try
 
     builder.Services.AddDataAccess(builder.Configuration);
     builder.Services.AddDomain();
-    builder.Services.AddControllers();
+
+    builder.Services
+        .AddControllers()
+        .AddNewtonsoftJson(options => { options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore; });
 
     builder.Services.AddHttpContextAccessor();
 

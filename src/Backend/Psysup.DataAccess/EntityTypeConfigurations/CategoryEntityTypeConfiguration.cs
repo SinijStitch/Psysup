@@ -11,6 +11,8 @@ public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).HasMaxLength(50).IsRequired();
 
+        builder.HasIndex(x => x.Name).IsUnique();
+
         builder
             .HasMany(x => x.Applications)
             .WithMany(x => x.Categories);

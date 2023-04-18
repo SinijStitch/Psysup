@@ -10,9 +10,12 @@ public class PsysupDbContext : DbContext, IPsysupDbContext
     {
     }
 
+
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<Application> Applications { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<ApplicationCategory> ApplicationCategories { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
