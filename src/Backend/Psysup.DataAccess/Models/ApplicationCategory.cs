@@ -2,8 +2,8 @@
 
 public class ApplicationCategory
 {
-    public Guid ApplicationsId { get; set; }
-    public Guid CategoriesId { get; set; }
+    public Guid ApplicationId { get; set; }
+    public Guid CategoryId { get; set; }
 
     public Application? Application { get; set; }
     public Category? Category { get; set; }

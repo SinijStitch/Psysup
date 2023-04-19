@@ -9,4 +9,6 @@ public class CreateApplicationCommand : IRequest<CreateApplicationResponse>
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; }
+
+    public IEnumerable<string> Categories { get; set; } = new List<string>();
 }

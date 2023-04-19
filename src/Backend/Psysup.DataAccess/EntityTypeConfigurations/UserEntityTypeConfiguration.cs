@@ -23,12 +23,7 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
         builder
             .HasMany(x => x.Roles)
             .WithMany(x => x.Users)
-            .UsingEntity<RoleUser>()
-            .HasData(new RoleUser
-            {
-                UsersId = Guid.Parse("FDA48C05-48B8-4655-B1E5-F0D707568EE3"),
-                RolesId = Guid.Parse("86A8803F-569D-4F6E-9433-7DFCCBF79EC2")
-            });
+            .UsingEntity<RoleUser>();
 
         builder.HasData(new User
         {

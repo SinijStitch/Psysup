@@ -60,20 +60,15 @@ namespace Psysup.DataAccess.Migrations
 
             modelBuilder.Entity("Psysup.DataAccess.Models.ApplicationCategory", b =>
                 {
-                    b.Property<Guid?>("ApplicationId")
+                    b.Property<Guid>("ApplicationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoriesId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ApplicationsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("ApplicationId", "CategoryId");
 
-                    b.HasKey("ApplicationId", "CategoriesId");
-
-                    b.HasIndex("ApplicationsId");
-
-                    b.HasIndex("CategoriesId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("ApplicationCategories");
                 });
@@ -135,33 +130,23 @@ namespace Psysup.DataAccess.Migrations
 
             modelBuilder.Entity("Psysup.DataAccess.Models.RoleUser", b =>
                 {
-                    b.Property<Guid>("RolesId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UsersId")
+                    b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("RolesId", "UsersId");
+                    b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUser");
+                    b.ToTable("RoleUsers");
 
                     b.HasData(
                         new
                         {
-                            RolesId = new Guid("86a8803f-569d-4f6e-9433-7dfccbf79ec2"),
-                            UsersId = new Guid("fda48c05-48b8-4655-b1e5-f0d707568ee3")
+                            UserId = new Guid("fda48c05-48b8-4655-b1e5-f0d707568ee3"),
+                            RoleId = new Guid("86a8803f-569d-4f6e-9433-7dfccbf79ec2")
                         });
                 });
 
@@ -214,13 +199,13 @@ namespace Psysup.DataAccess.Migrations
                 {
                     b.HasOne("Psysup.DataAccess.Models.Application", "Application")
                         .WithMany()
-                        .HasForeignKey("ApplicationsId")
+                        .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Psysup.DataAccess.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoriesId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -233,21 +218,13 @@ namespace Psysup.DataAccess.Migrations
                 {
                     b.HasOne("Psysup.DataAccess.Models.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId");
-
-                    b.HasOne("Psysup.DataAccess.Models.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Psysup.DataAccess.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Psysup.DataAccess.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

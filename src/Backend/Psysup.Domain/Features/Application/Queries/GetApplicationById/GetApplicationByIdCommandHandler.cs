@@ -24,6 +24,7 @@ public class GetApplicationByIdCommandHandler : IRequestHandler<GetApplicationBy
         CancellationToken cancellationToken)
     {
         var response = await _dbContext.Applications
+            .AsNoTracking()
             .Include(x => x.Categories)
             .Where(x => x.Id == request.ApplicationId && x.UserId == request.UserId)
             .ProjectTo<GetApplicationByIdResponse>(_mapper.ConfigurationProvider)

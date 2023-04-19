@@ -13,6 +13,7 @@ public class PsysupDbContext : DbContext, IPsysupDbContext
 
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<RoleUser> RoleUsers { get; set; } = null!;
     public DbSet<Application> Applications { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<ApplicationCategory> ApplicationCategories { get; set; } = null!;
@@ -25,5 +26,7 @@ public class PsysupDbContext : DbContext, IPsysupDbContext
         modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new RoleUserEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ApplicationCategoryEntityTypeConfiguration());
     }
 }

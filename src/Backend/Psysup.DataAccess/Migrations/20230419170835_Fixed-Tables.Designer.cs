@@ -12,8 +12,8 @@ using Psysup.DataAccess.Data;
 namespace Psysup.DataAccess.Migrations
 {
     [DbContext(typeof(PsysupDbContext))]
-    [Migration("20230405160343_Added-Default-Roles")]
-    partial class AddedDefaultRoles
+    [Migration("20230419170835_Fixed-Tables")]
+    partial class FixedTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace Psysup.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ApplicationCategory", b =>
-                {
-                    b.Property<Guid>("ApplicationsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ApplicationsId", "CategoriesId");
-
-                    b.HasIndex("CategoriesId");
-
-                    b.ToTable("ApplicationCategory");
-                });
 
             modelBuilder.Entity("Psysup.DataAccess.Models.Application", b =>
                 {
@@ -76,6 +61,21 @@ namespace Psysup.DataAccess.Migrations
                     b.ToTable("Applications");
                 });
 
+            modelBuilder.Entity("Psysup.DataAccess.Models.ApplicationCategory", b =>
+                {
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ApplicationId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ApplicationCategories");
+                });
+
             modelBuilder.Entity("Psysup.DataAccess.Models.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -89,7 +89,10 @@ namespace Psysup.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Psysup.DataAccess.Models.Role", b =>
@@ -128,6 +131,28 @@ namespace Psysup.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Psysup.DataAccess.Models.RoleUser", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("fda48c05-48b8-4655-b1e5-f0d707568ee3"),
+                            RoleId = new Guid("86a8803f-569d-4f6e-9433-7dfccbf79ec2")
+                        });
+                });
+
             modelBuilder.Entity("Psysup.DataAccess.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -152,36 +177,14 @@ namespace Psysup.DataAccess.Migrations
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Email"), new[] { "PasswordHash" });
 
                     b.ToTable("Users");
-                });
 
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<Guid>("RolesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUser");
-                });
-
-            modelBuilder.Entity("ApplicationCategory", b =>
-                {
-                    b.HasOne("Psysup.DataAccess.Models.Application", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Psysup.DataAccess.Models.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("fda48c05-48b8-4655-b1e5-f0d707568ee3"),
+                            Email = "psysadmin@gmail.com",
+                            PasswordHash = "$2b$10$u9qwtAmulUGnGH3fWiH3/ujpTuQYbOcJUj0EDvd/xYW8nueUjwdAK"
+                        });
                 });
 
             modelBuilder.Entity("Psysup.DataAccess.Models.Application", b =>
@@ -195,19 +198,42 @@ namespace Psysup.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("RoleUser", b =>
+            modelBuilder.Entity("Psysup.DataAccess.Models.ApplicationCategory", b =>
                 {
-                    b.HasOne("Psysup.DataAccess.Models.Role", null)
+                    b.HasOne("Psysup.DataAccess.Models.Application", "Application")
                         .WithMany()
-                        .HasForeignKey("RolesId")
+                        .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Psysup.DataAccess.Models.User", null)
+                    b.HasOne("Psysup.DataAccess.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Application");
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Psysup.DataAccess.Models.RoleUser", b =>
+                {
+                    b.HasOne("Psysup.DataAccess.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Psysup.DataAccess.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Psysup.DataAccess.Models.User", b =>

@@ -15,6 +15,7 @@ public class ApplicationProfile : Profile
         CreateMap<CreateApplicationRequest, CreateApplicationCommand>();
 
         CreateMap<CreateApplicationCommand, Application>()
+            .ForMember(x => x.Categories, x => x.Ignore())
             .AfterMap((_, dest) =>
             {
                 dest.Id = Guid.NewGuid();

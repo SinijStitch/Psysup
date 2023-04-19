@@ -36,9 +36,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
 
         var newUser = await CreateANewUser(request, cancellationToken);
 
-        await _dbContext.Users.AddAsync(newUser, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
         await _authService.SignInAsync(newUser);
 
         return _mapper.Map<AuthResponse>(newUser);
@@ -46,12 +43,22 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
 
     private async Task<User> CreateANewUser(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var userRole = await _dbContext.Roles.FirstAsync(x => x.Name == Roles.User.ToString(), cancellationToken);
+        var role = await _dbContext.Roles
+            .AsNoTracking()
+            .Where(x => x.Name == Roles.User.ToString())
+            .FirstAsync(cancellationToken);
 
         var newUser = _mapper.Map<User>(request);
 
         newUser.PasswordHash = _passwordHasher.HasPassword(request.Password);
-        newUser.Roles = new List<Role> { userRole };
+
+        var roleUser = new RoleUser { UserId = newUser.Id, RoleId = role.Id };
+
+        await _dbContext.Users.AddAsync(newUser, cancellationToken);
+        await _dbContext.RoleUsers.AddAsync(roleUser, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        newUser.Roles = new List<Role> { role };
 
         return newUser;
     }

@@ -22,8 +22,15 @@ public class GetApplicationsCommandHandler : IRequestHandler<GetApplicationsComm
         GetApplicationsCommand request,
         CancellationToken cancellationToken)
     {
-        var items = await _dbContext.Applications
-            .Where(x => x.UserId == request.UserId)
+        var query = _dbContext.Applications.AsNoTracking();
+
+        query = request.IsPublic
+            ? query.Where(x => x.UserId != request.UserId)
+            : query.Where(x => x.UserId == request.UserId);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
             .OrderBy(x => x.Title)
             .Skip(request.PageSize * request.PageNumber - request.PageSize)
             .Take(request.PageSize)
@@ -32,6 +39,7 @@ public class GetApplicationsCommandHandler : IRequestHandler<GetApplicationsComm
 
         return new GetApplicationsResponse
         {
+            TotalCount = totalCount,
             Applications = items
         };
     }

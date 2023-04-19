@@ -31,6 +31,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResponse>
     public async Task<AuthResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _dbContext.Users
+            .AsNoTracking()
             .Include(x => x.Roles)
             .FirstOrDefaultAsync(x => x.Email == request.Email, cancellationToken);
 

@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Psysup.DataAccess.Data;
+using Psysup.DataAccess.Models;
 using Psysup.DataContracts.Application.CreateApplication;
+using Psysup.Domain.Exceptions.Applications;
 
 namespace Psysup.Domain.Features.Application.Commands.CreateApplication;
 
@@ -20,9 +23,28 @@ public class CreateApplicationHandler : IRequestHandler<CreateApplicationCommand
         CreateApplicationCommand request,
         CancellationToken cancellationToken)
     {
+        var categories = await _dbContext.Categories
+            .AsNoTracking()
+            .Where(x => request.Categories.Contains(x.Name))
+            .ToListAsync(cancellationToken);
+
+        if (categories.Count != request.Categories.Count())
+        {
+            var invalidCategories = request.Categories.Except(categories.Select(x => x.Name));
+            throw new OneOrMoreCategoryDoesNotExist(invalidCategories);
+        }
+
         var application = _mapper.Map<DataAccess.Models.Application>(request);
 
+        var applicationCategories = categories
+            .Select(category => new ApplicationCategory
+            {
+                ApplicationId = application.Id,
+                CategoryId = category.Id
+            });
+
         await _dbContext.Applications.AddAsync(application, cancellationToken);
+        await _dbContext.ApplicationCategories.AddRangeAsync(applicationCategories, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new CreateApplicationResponse
