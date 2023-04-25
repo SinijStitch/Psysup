@@ -3,6 +3,8 @@ using Psysup.DataAccess.Models;
 using Psysup.DataContracts.Application.CreateApplication;
 using Psysup.DataContracts.Application.GetApplicationById;
 using Psysup.DataContracts.Application.GetApplications;
+using Psysup.DataContracts.Application.GetAppliedDoctors;
+using Psysup.Domain.Features.Application.Commands.ApplyDoctor;
 using Psysup.Domain.Features.Application.Commands.CreateApplication;
 using Psysup.Domain.Features.Application.Queries.GetApplications;
 
@@ -25,6 +27,8 @@ public class ApplicationProfile : Profile
         CreateMap<GetApplicationsRequest, GetApplicationsCommand>();
         CreateMap<Application, GetApplicationsResponseItem>();
         CreateMap<Application, GetApplicationByIdResponse>();
+        CreateMap<ApplyDoctorCommand, AppliedDoctorApplication>();
+        CreateMap<User, GetAppliedDoctorsResponseItem>();
         CreateMap<Category, GetApplicationByIdCategory>();
     }
 }

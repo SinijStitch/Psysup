@@ -9,6 +9,7 @@ public interface IPsysupDbContext : IDisposable, IAsyncDisposable
     DbSet<Role> Roles { get; }
     DbSet<RoleUser> RoleUsers { get; }
     DbSet<Application> Applications { get; }
+    DbSet<AppliedDoctorApplication> AppliedDoctorApplications { get; }
     DbSet<Category> Categories { get; }
     DbSet<ApplicationCategory> ApplicationCategories { get; }
 

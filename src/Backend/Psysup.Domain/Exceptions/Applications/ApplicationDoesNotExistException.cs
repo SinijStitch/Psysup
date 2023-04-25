@@ -4,10 +4,10 @@ namespace Psysup.Domain.Exceptions.Applications;
 
 public class ApplicationDoesNotExistException : NotFoundException
 {
-    private const string ErrorMessage = "Application was not found. Application ID: '{0}'";
+    private const string ErrorMessage = "Application was not found.";
 
-    public ApplicationDoesNotExistException(Guid id)
-        : base(string.Format(ErrorMessage, id))
+    public ApplicationDoesNotExistException()
+        : base(ErrorMessage)
     {
     }
 

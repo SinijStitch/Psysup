@@ -15,6 +15,7 @@ public class PsysupDbContext : DbContext, IPsysupDbContext
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<RoleUser> RoleUsers { get; set; } = null!;
     public DbSet<Application> Applications { get; set; } = null!;
+    public DbSet<AppliedDoctorApplication> AppliedDoctorApplications { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<ApplicationCategory> ApplicationCategories { get; set; } = null!;
 

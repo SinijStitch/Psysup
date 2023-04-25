@@ -30,6 +30,6 @@ public class GetApplicationByIdCommandHandler : IRequestHandler<GetApplicationBy
             .ProjectTo<GetApplicationByIdResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
-        return response ?? throw new ApplicationDoesNotExistException(request.ApplicationId);
+        return response ?? throw new ApplicationDoesNotExistException();
     }
 }
