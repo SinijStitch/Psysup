@@ -74,7 +74,7 @@ namespace Psysup.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleUser",
+                name: "RoleUsers",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -82,15 +82,15 @@ namespace Psysup.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleUser", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_RoleUsers", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_RoleUser_Roles_RoleId",
+                        name: "FK_RoleUsers_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleUser_Users_UserId",
+                        name: "FK_RoleUsers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -121,6 +121,30 @@ namespace Psysup.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AppliedDoctorApplication",
+                columns: table => new
+                {
+                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Approved = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    AsDoctor = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppliedDoctorApplication", x => new { x.DoctorId, x.ApplicationId });
+                    table.ForeignKey(
+                        name: "FK_AppliedDoctorApplication_Applications_ApplicationId",
+                        column: x => x.ApplicationId,
+                        principalTable: "Applications",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AppliedDoctorApplication_Users_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Name" },
@@ -137,7 +161,7 @@ namespace Psysup.DataAccess.Migrations
                 values: new object[] { new Guid("fda48c05-48b8-4655-b1e5-f0d707568ee3"), "psysadmin@gmail.com", "$2b$10$u9qwtAmulUGnGH3fWiH3/ujpTuQYbOcJUj0EDvd/xYW8nueUjwdAK" });
 
             migrationBuilder.InsertData(
-                table: "RoleUser",
+                table: "RoleUsers",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { new Guid("86a8803f-569d-4f6e-9433-7dfccbf79ec2"), new Guid("fda48c05-48b8-4655-b1e5-f0d707568ee3") });
 
@@ -152,6 +176,11 @@ namespace Psysup.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppliedDoctorApplication_ApplicationId",
+                table: "AppliedDoctorApplication",
+                column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Categories_Name",
                 table: "Categories",
                 column: "Name",
@@ -164,8 +193,8 @@ namespace Psysup.DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleUser_RoleId",
-                table: "RoleUser",
+                name: "IX_RoleUsers_RoleId",
+                table: "RoleUsers",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
@@ -183,13 +212,16 @@ namespace Psysup.DataAccess.Migrations
                 name: "ApplicationCategories");
 
             migrationBuilder.DropTable(
-                name: "RoleUser");
+                name: "AppliedDoctorApplication");
 
             migrationBuilder.DropTable(
-                name: "Applications");
+                name: "RoleUsers");
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Applications");
 
             migrationBuilder.DropTable(
                 name: "Roles");

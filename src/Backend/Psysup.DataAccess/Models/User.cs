@@ -8,4 +8,5 @@ public class User
 
     public IEnumerable<Role>? Roles { get; set; }
     public IEnumerable<Application>? Applications { get; set; }
+    public IEnumerable<AppliedDoctorApplication>? DoctorApplications { get; set; }
 }

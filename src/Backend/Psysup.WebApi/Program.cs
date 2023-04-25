@@ -1,7 +1,9 @@
 using System.Globalization;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Psysup.DataAccess;
+using Psysup.DataAccess.Data;
 using Psysup.Domain;
 using Psysup.Domain.Constants;
 using Psysup.WebApi.Middlewares.Error;
@@ -50,6 +52,12 @@ try
         });
 
     var app = builder.Build();
+
+    await using (var scope = app.Services.CreateAsyncScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<PsysupDbContext>();
+        await dbContext.Database.MigrateAsync();
+    }
 
     // Middleware
     app.UseErrorHandler();

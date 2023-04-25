@@ -73,6 +73,31 @@ namespace Psysup.DataAccess.Migrations
                     b.ToTable("ApplicationCategories");
                 });
 
+            modelBuilder.Entity("Psysup.DataAccess.Models.AppliedDoctorApplication", b =>
+                {
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Approved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("AsDoctor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.HasKey("DoctorId", "ApplicationId");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("AppliedDoctorApplication");
+                });
+
             modelBuilder.Entity("Psysup.DataAccess.Models.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -214,6 +239,25 @@ namespace Psysup.DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Psysup.DataAccess.Models.AppliedDoctorApplication", b =>
+                {
+                    b.HasOne("Psysup.DataAccess.Models.Application", "Application")
+                        .WithMany("AppliedDoctorApplications")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Psysup.DataAccess.Models.User", "Doctor")
+                        .WithMany("DoctorApplications")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+
+                    b.Navigation("Doctor");
+                });
+
             modelBuilder.Entity("Psysup.DataAccess.Models.RoleUser", b =>
                 {
                     b.HasOne("Psysup.DataAccess.Models.Role", "Role")
@@ -233,9 +277,16 @@ namespace Psysup.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Psysup.DataAccess.Models.Application", b =>
+                {
+                    b.Navigation("AppliedDoctorApplications");
+                });
+
             modelBuilder.Entity("Psysup.DataAccess.Models.User", b =>
                 {
                     b.Navigation("Applications");
+
+                    b.Navigation("DoctorApplications");
                 });
 #pragma warning restore 612, 618
         }

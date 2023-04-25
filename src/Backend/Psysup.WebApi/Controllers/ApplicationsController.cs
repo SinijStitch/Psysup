@@ -37,6 +37,7 @@ public class ApplicationsController : ApiControllerBase
     {
         var command = _mapper.Map<GetApplicationsCommand>(request);
         command.UserId = UserId;
+        command.Roles = UserRoles;
         var response = await _sender.Send(command);
         return Ok(response);
     }

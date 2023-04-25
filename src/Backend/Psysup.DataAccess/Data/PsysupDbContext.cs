@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Psysup.DataAccess.EntityTypeConfigurations;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Psysup.DataAccess.Models;
 
 namespace Psysup.DataAccess.Data;
@@ -22,11 +22,6 @@ public class PsysupDbContext : DbContext, IPsysupDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new ApplicationEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleUserEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new ApplicationCategoryEntityTypeConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

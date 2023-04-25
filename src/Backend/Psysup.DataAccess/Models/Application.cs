@@ -14,4 +14,5 @@ public class Application
     public User? User { get; set; }
 
     public IEnumerable<Category>? Categories { get; set; }
+    public IEnumerable<AppliedDoctorApplication>? AppliedDoctorApplications { get; set; }
 }
