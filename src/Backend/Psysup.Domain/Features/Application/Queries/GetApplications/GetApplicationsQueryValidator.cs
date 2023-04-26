@@ -3,9 +3,9 @@ using Psysup.Domain.Enums;
 
 namespace Psysup.Domain.Features.Application.Queries.GetApplications;
 
-public class GetApplicationsCommandValidator : AbstractValidator<GetApplicationsCommand>
+public class GetApplicationsQueryValidator : AbstractValidator<GetApplicationsQuery>
 {
-    public GetApplicationsCommandValidator()
+    public GetApplicationsQueryValidator()
     {
         RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.PageNumber).GreaterThanOrEqualTo(1);

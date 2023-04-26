@@ -2,9 +2,9 @@
 
 namespace Psysup.Domain.Features.Application.Queries.GetApplicationById;
 
-public class GetApplicationByIdCommandValidator : AbstractValidator<GetApplicationByIdCommand>
+public class GetApplicationByIdQueryValidator : AbstractValidator<GetApplicationByIdQuery>
 {
-    public GetApplicationByIdCommandValidator()
+    public GetApplicationByIdQueryValidator()
     {
         RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.ApplicationId).NotEmpty();

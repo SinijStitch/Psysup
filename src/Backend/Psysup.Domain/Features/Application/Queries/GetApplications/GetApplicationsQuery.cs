@@ -4,7 +4,7 @@ using Psysup.Domain.Enums;
 
 namespace Psysup.Domain.Features.Application.Queries.GetApplications;
 
-public class GetApplicationsCommand : IRequest<GetApplicationsResponse>
+public class GetApplicationsQuery : IRequest<GetApplicationsResponse>
 {
     public Guid UserId { get; set; }
     public Roles Roles { get; set; }

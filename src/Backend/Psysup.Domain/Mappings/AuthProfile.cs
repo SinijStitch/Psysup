@@ -17,9 +17,7 @@ public class AuthProfile : Profile
 
         CreateMap<RegisterCommand, User>().AfterMap((_, dest) => { dest.Id = Guid.NewGuid(); });
 
-        CreateMap<User, AuthResponse>().AfterMap((src, dest) =>
-        {
-            dest.Roles = src.Roles?.Select(x => x.Name) ?? new List<string>();
-        });
+        CreateMap<Role, string>().ConvertUsing(x => x.Name);
+        CreateMap<User, AuthResponse>();
     }
 }

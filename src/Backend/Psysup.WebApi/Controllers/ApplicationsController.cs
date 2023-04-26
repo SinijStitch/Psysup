@@ -38,18 +38,18 @@ public class ApplicationsController : ApiControllerBase
     [HttpGet]
     public async Task<IActionResult> GetApplicationsAsync([FromQuery] GetApplicationsRequest request)
     {
-        var command = _mapper.Map<GetApplicationsCommand>(request);
-        command.UserId = UserId;
-        command.Roles = UserRoles;
-        var response = await _sender.Send(command);
+        var query = _mapper.Map<GetApplicationsQuery>(request);
+        query.UserId = UserId;
+        query.Roles = UserRoles;
+        var response = await _sender.Send(query);
         return Ok(response);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetApplicationByIdAsync([FromRoute] Guid id)
     {
-        var command = new GetApplicationByIdCommand { UserId = UserId, ApplicationId = id };
-        var response = await _sender.Send(command);
+        var query = new GetApplicationByIdQuery { UserId = UserId, ApplicationId = id };
+        var response = await _sender.Send(query);
         return Ok(response);
     }
 
@@ -66,8 +66,8 @@ public class ApplicationsController : ApiControllerBase
     [HttpGet("apply/{applicationId}")]
     public async Task<IActionResult> GetAppliedDoctorsAsync([FromRoute] Guid applicationId)
     {
-        var command = new GetAppliedDoctorsQuery { UserId = UserId, ApplicationId = applicationId };
-        var response = await _sender.Send(command);
+        var query = new GetAppliedDoctorsQuery { UserId = UserId, ApplicationId = applicationId };
+        var response = await _sender.Send(query);
         return Ok(response);
     }
 }

@@ -8,19 +8,19 @@ using Psysup.Domain.Exceptions.Applications;
 
 namespace Psysup.Domain.Features.Application.Queries.GetApplicationById;
 
-public class GetApplicationByIdCommandHandler : IRequestHandler<GetApplicationByIdCommand, GetApplicationByIdResponse>
+public class GetApplicationByIdQueryHandler : IRequestHandler<GetApplicationByIdQuery, GetApplicationByIdResponse>
 {
     private readonly IPsysupDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public GetApplicationByIdCommandHandler(IPsysupDbContext dbContext, IMapper mapper)
+    public GetApplicationByIdQueryHandler(IPsysupDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
     }
 
     public async Task<GetApplicationByIdResponse> Handle(
-        GetApplicationByIdCommand request,
+        GetApplicationByIdQuery request,
         CancellationToken cancellationToken)
     {
         var response = await _dbContext.Applications

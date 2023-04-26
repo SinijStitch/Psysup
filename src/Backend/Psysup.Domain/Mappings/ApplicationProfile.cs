@@ -24,7 +24,7 @@ public class ApplicationProfile : Profile
                 dest.CreationDateTime = DateTimeOffset.UtcNow;
             });
 
-        CreateMap<GetApplicationsRequest, GetApplicationsCommand>();
+        CreateMap<GetApplicationsRequest, GetApplicationsQuery>();
         CreateMap<Application, GetApplicationsResponseItem>();
         CreateMap<Application, GetApplicationByIdResponse>();
         CreateMap<ApplyDoctorCommand, AppliedDoctorApplication>();

@@ -7,19 +7,19 @@ using Psysup.DataContracts.Application.GetApplications;
 
 namespace Psysup.Domain.Features.Application.Queries.GetApplications;
 
-public class GetApplicationsCommandHandler : IRequestHandler<GetApplicationsCommand, GetApplicationsResponse>
+public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery, GetApplicationsResponse>
 {
     private readonly IPsysupDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public GetApplicationsCommandHandler(IPsysupDbContext dbContext, IMapper mapper)
+    public GetApplicationsQueryHandler(IPsysupDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
     }
 
     public async Task<GetApplicationsResponse> Handle(
-        GetApplicationsCommand request,
+        GetApplicationsQuery request,
         CancellationToken cancellationToken)
     {
         var query = _dbContext.Applications.AsNoTracking();
