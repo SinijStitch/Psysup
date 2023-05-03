@@ -1,26 +1,28 @@
+import MainLayout from "layouts/MainLayout";
+import ProfilePage from "pages/ProfilePage";
+import SettingsPage from "pages/SettingsPage";
+import ApplicationListPage from "pages/applications/ApplicationListPage";
+import ApplicationPage from "pages/applications/ApplicationPage";
+import LoginPage from "pages/auth/LoginPage";
+import RegisterPage from "pages/auth/RegisterPage";
 import React from "react";
-import { Route, Routes } from "react-router-dom";
-import MainLayout from "common/layouts/MainLayout";
-import HomePage from "features/dashboard/pages/HomePage";
-import ApplicationListPage from "features/application/pages/ApplicationListPage";
-import ApplicationPage from "features/application/pages/ApplicationPage";
-import AuthLayout from "common/layouts/AuthLayout";
-import LoginPage from "features/auth/pages/LoginPage";
-import RegisterPage from "features/auth/pages/RegisterPage";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/">
         <Route element={<MainLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="applications" element={<ApplicationListPage />} />
+          <Route index element={<ApplicationListPage />} />
           <Route path="applications/:id" element={<ApplicationPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
-        <Route element={<AuthLayout />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-        </Route>
+
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Route>
     </Routes>
   );

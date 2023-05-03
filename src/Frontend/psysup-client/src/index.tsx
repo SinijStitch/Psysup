@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { store } from "./redux/store";
 import { ToastContainer } from "react-toastify";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import TopBarProgress from "react-topbar-progress-indicator";
