@@ -1,12 +1,15 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { apiSlice } from "./api/apiSlice";
+import globalReducer from "./globalSlice";
+import { errorMiddleware } from "./middlewares/errorMiddleware";
 
 export const store = configureStore({
   reducer: {
+    global: globalReducer,
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware().concat(errorMiddleware).concat(apiSlice.middleware),
   devTools: true
 });
 

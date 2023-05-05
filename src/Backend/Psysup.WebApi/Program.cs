@@ -51,6 +51,11 @@ try
             };
         });
 
+    builder.Services.AddCors(options => options.AddDefaultPolicy(policyBuilder =>
+    {
+        policyBuilder.WithOrigins("https://localhost:3000").AllowCredentials().AllowAnyHeader().AllowAnyMethod();
+    }));
+
     var app = builder.Build();
 
     await using (var scope = app.Services.CreateAsyncScope())
@@ -60,8 +65,9 @@ try
     }
 
     // Middleware
+    app.UseCors();
+    app.UseHttpsRedirection();
     app.UseErrorHandler();
-
     app.UseAuthentication();
     app.UseAuthorization();
 

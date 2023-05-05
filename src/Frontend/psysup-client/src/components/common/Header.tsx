@@ -1,17 +1,15 @@
-import {
-  AppBar,
-  Box,
-  Container,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography
-} from "@mui/material";
+import { AppBar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import React from "react";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { selectMode, toggleMode } from "redux/globalSlice";
 
 const Header: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const mode = useAppSelector(selectMode);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -27,55 +25,55 @@ const Header: React.FC = () => {
       component="header"
       position="static"
       elevation={0}
-      sx={{ bgcolor: "common.white" }}
+      sx={{
+        bgcolor: "background.alt",
+        color: "text.primary"
+      }}
     >
-      <Toolbar disableGutters>
-        <Container maxWidth="xl">
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            color="grey.800"
-          >
-            <Typography
-              variant="h5"
-              noWrap
-              sx={{
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-                flexGrow: 1
-              }}
-            >
-              Psysup
-            </Typography>
+      <Toolbar>
+        <Typography
+          variant="h5"
+          noWrap
+          sx={{
+            fontFamily: "monospace",
+            fontWeight: 700,
+            letterSpacing: ".3rem",
+            color: "inherit",
+            textDecoration: "none",
+            flexGrow: 1
+          }}
+        >
+          Psysup
+        </Typography>
 
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
-              </Menu>
-            </div>
-          </Box>
-        </Container>
+        <IconButton onClick={() => dispatch(toggleMode())}>
+          {mode === "dark" ? (
+            <DarkModeOutlinedIcon sx={{ color: "text.primary" }} />
+          ) : (
+            <LightModeOutlinedIcon sx={{ color: "text.primary" }} />
+          )}
+        </IconButton>
+
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          onClick={handleMenu}
+          color="inherit"
+        >
+          <AccountCircleIcon />
+        </IconButton>
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>Logout</MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );

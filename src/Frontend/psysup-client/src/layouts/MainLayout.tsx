@@ -1,4 +1,5 @@
 import { Box, Stack } from "@mui/material";
+import Footer from "components/common/Footer";
 import Header from "components/common/Header";
 import NavBar from "components/common/NavBar";
 import React from "react";
@@ -6,15 +7,18 @@ import { Outlet } from "react-router-dom";
 
 const MainLayout: React.FC = () => {
   return (
-    <Stack sx={{ height: "100vh" }}>
+    <Stack height="100vh">
       <Header />
 
-      <Stack direction="row" sx={{ height: "100%" }}>
+      <Stack direction="row" height="100%">
         <NavBar />
 
-        <Box component="main" bgcolor="grey.50" padding={2.5} flexGrow={1}>
-          <Outlet />
-        </Box>
+        <Stack width="100%">
+          <Box component="main" padding={4} flexGrow={1}>
+            <Outlet />
+          </Box>
+          <Footer />
+        </Stack>
       </Stack>
     </Stack>
   );

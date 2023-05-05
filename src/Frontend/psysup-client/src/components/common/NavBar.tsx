@@ -1,4 +1,5 @@
 import {
+  Box,
   List,
   ListItemButton,
   ListItemIcon,
@@ -46,7 +47,7 @@ const NavBar: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <nav>
+    <Box component="nav" bgcolor="background.alt">
       <List>
         {menuItems.map((item) => (
           <ListItemButton key={item.label} onClick={() => navigate(item.path)}>
@@ -62,7 +63,7 @@ const NavBar: React.FC = () => {
           </ListItemButton>
         ))}
       </List>
-    </nav>
+    </Box>
   );
 };
 

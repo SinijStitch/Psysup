@@ -1,6 +1,7 @@
 import { AuthResponse } from "types/auth/AuthResponse";
 import { apiSlice } from "./apiSlice";
 import { LoginRequest } from "types/auth/LoginRequest";
+import { RegisterRequest } from "types/auth/RegisterRequest";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,8 +11,22 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: request
       })
+    }),
+    register: builder.mutation<AuthResponse, RegisterRequest>({
+      query: (request) => ({
+        url: "/auth/register",
+        method: "POST",
+        body: request
+      })
+    }),
+    logout: builder.mutation<void, void>({
+      query: (request) => ({
+        url: "/auth/logout",
+        method: "POST"
+      })
     })
   })
 });
 
-export const { useLoginMutation } = authApiSlice;
+export const { useLoginMutation, useRegisterMutation, useLogoutMutation } =
+  authApiSlice;
