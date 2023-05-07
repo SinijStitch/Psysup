@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Link, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Link, Paper, Typography } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouteLink } from "react-router-dom";
@@ -39,14 +39,14 @@ const AuthForm: React.FC<AuthFormProps> = ({
 
   return (
     <Box
+    component={Paper}
       m="0 auto"
-      mt={20}
       p="24px"
       width="400px"
       textAlign="center"
       boxShadow={3}
       borderRadius={4}
-      bgcolor="background.alt"
+      elevation={1}
     >
       <Typography variant="h4" component="h1">
         {title}

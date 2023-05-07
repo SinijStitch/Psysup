@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Divider, Stack } from "@mui/material";
 import Footer from "components/common/Footer";
 import Header from "components/common/Header";
 import NavBar from "components/common/NavBar";
@@ -7,10 +7,14 @@ import { Outlet } from "react-router-dom";
 
 const MainLayout: React.FC = () => {
   return (
-    <Stack height="100vh">
+    <Stack height="100vh" divider={<Divider flexItem />}>
       <Header />
 
-      <Stack direction="row" height="100%">
+      <Stack
+        direction="row"
+        height="100%"
+        divider={<Divider orientation="vertical" flexItem />}
+      >
         <NavBar />
 
         <Stack width="100%">

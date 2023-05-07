@@ -1,16 +1,24 @@
-import { AppBar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import {
+  AppBar,
+  Button,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography
+} from "@mui/material";
 import React from "react";
-import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { selectMode, toggleMode } from "redux/globalSlice";
+import { useNavigate } from "react-router-dom";
+import { useLogoutMutation } from "redux/api/authApiSlice";
+import TopBarProgress from "react-topbar-progress-indicator";
+import { useGetProfileQuery } from "redux/api/profileApiSlice";
+import { RouteConstants } from "enums/RouteConstants";
+import ThemeToggler from "./ThemeToggler";
 
 const Header: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const mode = useAppSelector(selectMode);
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [logout, { isLoading }] = useLogoutMutation();
+  const { data } = useGetProfileQuery();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -20,15 +28,16 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
+  if (isLoading) {
+    return <TopBarProgress />;
+  }
+
   return (
     <AppBar
       component="header"
       position="static"
       elevation={0}
-      sx={{
-        bgcolor: "background.alt",
-        color: "text.primary"
-      }}
+      color="transparent"
     >
       <Toolbar>
         <Typography
@@ -40,30 +49,19 @@ const Header: React.FC = () => {
             letterSpacing: ".3rem",
             color: "inherit",
             textDecoration: "none",
-            flexGrow: 1
+            flexGrow: 1,
+            cursor: "pointer"
           }}
+          onClick={() => navigate(RouteConstants.APPLICATIONS)}
         >
           Psysup
         </Typography>
 
-        <IconButton onClick={() => dispatch(toggleMode())}>
-          {mode === "dark" ? (
-            <DarkModeOutlinedIcon sx={{ color: "text.primary" }} />
-          ) : (
-            <LightModeOutlinedIcon sx={{ color: "text.primary" }} />
-          )}
-        </IconButton>
+        <ThemeToggler />
 
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="menu-appbar"
-          aria-haspopup="true"
-          onClick={handleMenu}
-          color="inherit"
-        >
-          <AccountCircleIcon />
-        </IconButton>
+        <Button size="small" onClick={handleMenu} color="inherit">
+          {data?.email}
+        </Button>
         <Menu
           id="menu-appbar"
           anchorEl={anchorEl}
@@ -71,8 +69,15 @@ const Header: React.FC = () => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem
+            onClick={() => {
+              navigate(RouteConstants.PROFILE);
+              handleClose();
+            }}
+          >
+            Profile
+          </MenuItem>
+          <MenuItem onClick={() => logout()}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

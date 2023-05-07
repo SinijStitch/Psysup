@@ -17,6 +17,11 @@ import { selectMode } from "redux/globalSlice";
 import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "components/routes/PrivateRoute";
 import PublicRoute from "components/routes/PublicRoute";
+import CategoriesPage from "pages/categories/CategoriesPage";
+import UsersPage from "pages/users/UsersPage";
+import { RouteConstants } from "enums/RouteConstants";
+import AuthLayout from "layouts/AuthLayout";
+import AddApplicationPage from "pages/applications/AddApplicationPage";
 
 TopBarProgress.config({});
 
@@ -33,16 +38,46 @@ const App: React.FC = () => {
           <Route path="/">
             <Route element={<PrivateRoute />}>
               <Route element={<MainLayout />}>
-                <Route index element={<ApplicationListPage />} />
-                <Route path="applications/:id" element={<ApplicationPage />} />
-                <Route path="profile" element={<ProfilePage />} />
-                <Route path="settings" element={<SettingsPage />} />
+                <Route
+                  index
+                  element={<Navigate to={RouteConstants.APPLICATIONS} />}
+                />
+                <Route
+                  path={RouteConstants.APPLICATIONS}
+                  element={<ApplicationListPage />}
+                />
+                <Route
+                  path={RouteConstants.APPLICATION}
+                  element={<ApplicationPage />}
+                />
+                <Route
+                  path={RouteConstants.ADD_APPLICATION}
+                  element={<AddApplicationPage />}
+                />
+                <Route
+                  path={RouteConstants.CATEGORIES}
+                  element={<CategoriesPage />}
+                />
+                <Route path={RouteConstants.USERS} element={<UsersPage />} />
+                <Route
+                  path={RouteConstants.PROFILE}
+                  element={<ProfilePage />}
+                />
+                <Route
+                  path={RouteConstants.SETTINGS}
+                  element={<SettingsPage />}
+                />
               </Route>
             </Route>
 
             <Route element={<PublicRoute />}>
-              <Route path="login" element={<LoginPage />} />
-              <Route path="register" element={<RegisterPage />} />
+              <Route element={<AuthLayout />}>
+                <Route path={RouteConstants.LOGIN} element={<LoginPage />} />
+                <Route
+                  path={RouteConstants.REGISTER}
+                  element={<RegisterPage />}
+                />
+              </Route>
             </Route>
 
             <Route path="*" element={<Navigate to="/" />} />
