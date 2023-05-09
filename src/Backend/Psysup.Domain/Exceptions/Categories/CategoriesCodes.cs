@@ -2,5 +2,6 @@
 
 public enum CategoriesCodes
 {
-    CategoryAlreadyExists = 3000
+    CategoryAlreadyExists = 3000,
+    CategoryDoesNotExist = 3001
 }

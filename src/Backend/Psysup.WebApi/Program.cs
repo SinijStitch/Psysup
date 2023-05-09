@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Psysup.DataAccess;
@@ -34,6 +35,11 @@ try
 
     builder.Services.AddHttpContextAccessor();
 
+    builder.Services.Configure<ApiBehaviorOptions>(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    });
+
     builder.Services
         .AddAuthentication(CookieConstants.CookieScheme)
         .AddCookie(CookieConstants.CookieScheme, options =>
@@ -67,6 +73,7 @@ try
     // Middleware
     app.UseCors();
     app.UseHttpsRedirection();
+    app.UseStaticFiles();
     app.UseErrorHandler();
     app.UseAuthentication();
     app.UseAuthorization();

@@ -6,8 +6,15 @@ export const profileApiSlice = apiSlice.injectEndpoints({
     getProfile: builder.query<GetProfileResponse, void>({
       query: () => "/profile",
       providesTags: ["User"]
+    }),
+    updateProfile : builder.mutation<void, FormData>({
+      query: (body) => ({
+        url: "/profile",
+        method: "PUT",
+        body
+      })
     })
   })
 });
 
-export const { useGetProfileQuery } = profileApiSlice;
+export const { useGetProfileQuery, useUpdateProfileMutation } = profileApiSlice;

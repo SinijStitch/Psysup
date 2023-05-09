@@ -11,8 +11,9 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Email).HasMaxLength(100).IsRequired();
         builder.Property(x => x.PasswordHash).HasMaxLength(100).IsRequired();
+        builder.Property(x => x.ImagePath).HasMaxLength(100);
 
-        builder.HasIndex(x => x.Email).IsUnique().IncludeProperties(x => new { Password = x.PasswordHash });
+        builder.HasIndex(x => x.Email).IsUnique().IncludeProperties(x => new { Password = x.PasswordHash, x.ImagePath });
 
         builder
             .HasMany(x => x.Applications)

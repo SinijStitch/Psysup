@@ -13,6 +13,7 @@ import TopBarProgress from "react-topbar-progress-indicator";
 import { useGetProfileQuery } from "redux/api/profileApiSlice";
 import { RouteConstants } from "enums/RouteConstants";
 import ThemeToggler from "./ThemeToggler";
+import UserAvatar from "components/profile/UserAvatar";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ const Header: React.FC = () => {
         <ThemeToggler />
 
         <Button size="small" onClick={handleMenu} color="inherit">
-          {data?.email}
+          <UserAvatar />
         </Button>
         <Menu
           id="menu-appbar"

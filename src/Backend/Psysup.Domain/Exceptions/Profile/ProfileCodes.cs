@@ -2,5 +2,6 @@
 
 public enum ProfileCodes
 {
-    ProfileWasNotFound = 5000
+    ProfileWasNotFound = 5000,
+    InvalidImage = 5001
 }
