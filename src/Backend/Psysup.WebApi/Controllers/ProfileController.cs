@@ -12,8 +12,8 @@ namespace Psysup.WebApi.Controllers;
 [Route("[controller]")]
 public class ProfileController : ApiControllerBase
 {
-    private readonly ISender _sender;
     private readonly IMapper _mapper;
+    private readonly ISender _sender;
 
     public ProfileController(ISender sender, IMapper mapper)
     {

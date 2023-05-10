@@ -1,18 +1,19 @@
-import { TextField, capitalize } from "@mui/material";
+import { TextField } from "@mui/material";
 import React from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
-import { FormData } from "types/auth/FormData";
 
 interface FormInputProps {
-  name: "email" | "password";
+  name: string;
   type: string;
-  control: Control<FormData, any>;
+  label: string;
+  control: Control<any, any>;
   fieldError: FieldError | undefined;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
   name,
   type,
+  label,
   control,
   fieldError
 }) => {
@@ -27,7 +28,7 @@ const FormInput: React.FC<FormInputProps> = ({
           variant="outlined"
           fullWidth
           margin="normal"
-          label={capitalize(name)}
+          label={label}
           {...field}
           error={!!fieldError}
           helperText={fieldError?.message}

@@ -1,12 +1,12 @@
 import AuthForm from "components/auth/AuthForm";
 import React from "react";
 import { useRegisterMutation } from "redux/api/authApiSlice";
-import { FormData } from "types/auth/FormData";
+import { AuthFormData } from "types/auth/FormData";
 
 const RegisterPage: React.FC = () => {
   const [register, { isLoading }] = useRegisterMutation();
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: AuthFormData) => {
     register(data);
   };
 

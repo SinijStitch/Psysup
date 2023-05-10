@@ -2,54 +2,86 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Psysup.DataAccess.Data;
+using Psysup.DataAccess.Models;
 using Psysup.Domain.Exceptions.Profile;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Psysup.Domain.Services.Hash;
 
-namespace Psysup.Domain.Features.Profile.Commands.UpdateProfile
+namespace Psysup.Domain.Features.Profile.Commands.UpdateProfile;
+
+public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand>
 {
-    public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand>
+    private readonly IPsysupDbContext _dbContext;
+    private readonly IWebHostEnvironment _environment;
+    private readonly IPasswordHasher _passwordHasher;
+
+    public UpdateProfileCommandHandler(IPsysupDbContext dbContext, IPasswordHasher passwordHasher,
+        IWebHostEnvironment environment)
     {
-        private readonly IPsysupDbContext _dbContext;
-        private readonly IWebHostEnvironment _environment;
+        _dbContext = dbContext;
+        _passwordHasher = passwordHasher;
+        _environment = environment;
+    }
 
-        public UpdateProfileCommandHandler(IPsysupDbContext dbContext, IWebHostEnvironment environment)
+    public async Task Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+    {
+        var user = await FindUserOrThrowExceptionAsync(request, cancellationToken);
+        SetEmailIfExists(request, user);
+        SetNewPasswordIfExists(request, user);
+        await SetImageIfExistsAsync(request, user, cancellationToken);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task SetImageIfExistsAsync(
+        UpdateProfileCommand request,
+        User user,
+        CancellationToken cancellationToken)
+    {
+        if (request.Image == null)
         {
-            _dbContext = dbContext;
-            _environment = environment;
+            return;
         }
 
-        public async Task Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+        try
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
+            const string folderName = "Images";
+            var image = request.Image;
+            var fileName = $"{user.Id}.jpeg";
+            var filePath = Path.Combine(_environment.WebRootPath, folderName, fileName);
 
-            if(user == null)
-            {
-                throw new ProfileWasNotFoundException();
-            }
+            var img = await Image.LoadAsync(image.OpenReadStream(), cancellationToken);
+            img.Mutate(x => x.Resize(184, 184));
+            await img.SaveAsync(filePath, cancellationToken);
 
-            try
-            {
-                const string folderName = "Images";
-                var image = request.Image;
-                var extension = Path.GetExtension(image.FileName);
-                var fileName = $"{user.Id}{extension}";
-                var filePath = Path.Combine(_environment.WebRootPath, folderName, fileName);
-
-                var img = await Image.LoadAsync(image.OpenReadStream(), cancellationToken);
-                img.Mutate(x => x.Resize(184, 184));
-                await img.SaveAsync(filePath, cancellationToken);
-
-                user.ImagePath = $"{folderName}/{fileName}";
-                await _dbContext.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidImageException(ex.Message);
-            }
+            user.ImagePath = $"{folderName}/{fileName}";
         }
+        catch (Exception exception)
+        {
+            throw new InvalidImageException(exception.Message);
+        }
+    }
+
+    private void SetNewPasswordIfExists(UpdateProfileCommand request, User user)
+    {
+        if (request.NewPassword != null && !_passwordHasher.Verify(request.NewPassword, user.PasswordHash))
+        {
+            user.PasswordHash = _passwordHasher.HasPassword(request.NewPassword);
+        }
+    }
+
+    private static void SetEmailIfExists(UpdateProfileCommand request, User user)
+    {
+        if (request.Email != null && request.Email != user.Email)
+        {
+            user.Email = request.Email;
+        }
+    }
+
+    private async Task<User> FindUserOrThrowExceptionAsync(
+        UpdateProfileCommand request,
+        CancellationToken cancellationToken)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
+        return user ?? throw new ProfileWasNotFoundException();
     }
 }

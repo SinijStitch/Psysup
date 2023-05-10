@@ -1,23 +1,31 @@
-import { Box, Button, CircularProgress, Link, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Link,
+  Paper,
+  Typography
+} from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouteLink } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormData } from "types/auth/FormData";
+import { AuthFormData } from "types/auth/FormData";
 import * as yup from "yup";
-import FormInput from "./FormInput";
+import FormInput from "../common/FormInput";
+import LoadingButton from "components/common/LoadingButton";
 
 interface AuthFormProps {
   title: string;
   linkPath: string;
   linkText: string;
   isLoading: boolean;
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: AuthFormData) => void;
 }
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
-  password: yup.string().min(8).required()
+  password: yup.string().min(2).required()
 });
 
 const AuthForm: React.FC<AuthFormProps> = ({
@@ -31,7 +39,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<FormData>({
+  } = useForm<AuthFormData>({
     resolver: yupResolver(schema)
   });
 
@@ -39,7 +47,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
 
   return (
     <Box
-    component={Paper}
+      component={Paper}
       m="0 auto"
       p="24px"
       width="400px"
@@ -56,25 +64,22 @@ const AuthForm: React.FC<AuthFormProps> = ({
         <FormInput
           name="email"
           type="text"
+          label="Email"
           control={control}
           fieldError={errors?.email}
         />
         <FormInput
           name="password"
           type="password"
+          label="Password"
           control={control}
           fieldError={errors?.password}
         />
 
         <Box mt="8px">
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            disabled={isLoading}
-          >
-            {isLoading ? <CircularProgress size="24px" /> : "Submit"}
-          </Button>
+          <LoadingButton type="submit" fullWidth isLoading={isLoading}>
+            <Typography>Submit</Typography>
+          </LoadingButton>
         </Box>
       </Box>
 
