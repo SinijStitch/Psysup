@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  CircularProgress,
   Link,
   Paper,
   Typography

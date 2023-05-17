@@ -1,105 +1,73 @@
 import {
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  Grid,
-  MenuItem,
   Pagination,
-  Skeleton,
   Stack,
   TextField,
   Typography
 } from "@mui/material";
 import ApplicationList from "components/applications/ApplicationList";
+import ApplicationListSkeleton from "components/applications/ApplicationListSkeleton";
 import PageTitle from "components/common/PageTitle";
-import { RouteConstants } from "enums/RouteConstants";
+import { ERoute } from "enums/ERoute";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetApplicationsQuery } from "redux/api/applicationsApiSlice";
+import { useLazyGetApplicationsQuery } from "redux/api/applicationsApiSlice";
 
-const categories = [
-  {
-    value: "All",
-    label: "All"
-  },
-  {
-    value: "USD",
-    label: "First"
-  },
-  {
-    value: "EUR",
-    label: "Second"
-  },
-  {
-    value: "BTC",
-    label: "Third"
-  }
-];
+const pageSize = 12;
 
 const ApplicationListPage: React.FC = () => {
   const navigate = useNavigate();
-  const { isLoading, data } = useGetApplicationsQuery({
-    isPublic: false,
-    pageNumber: 1,
-    pageSize: 10
-  });
+  const [pageNumber, setPageNumber] = React.useState<number>(1);
+  const [loadApplications, loadApplicationsResult] =
+    useLazyGetApplicationsQuery();
+
+  React.useEffect(() => {
+    loadApplications({
+      isPublic: false,
+      pageSize,
+      pageNumber
+    });
+  }, [loadApplications, pageNumber]);
 
   return (
     <Stack height="100%" gap={2}>
       <PageTitle text="Applications" />
       <Stack direction="row" gap={4}>
-        <TextField placeholder="Search..." variant="standard" />
         <TextField
-          select
-          size="small"
-          label="Categories"
-          defaultValue="All"
-          sx={{ minWidth: "100px" }}
-        >
-          {categories.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+          fullWidth
+          label="Search..."
+          type="search"
+          variant="standard"
+        />
 
         <Button
           variant="contained"
-          sx={{ ml: "auto" }}
-          onClick={() => navigate(RouteConstants.ADD_APPLICATION)}
+          onClick={() => navigate(ERoute.ADD_APPLICATION)}
+          sx={{ minWidth: "158px" }}
         >
           Add Application
         </Button>
       </Stack>
 
-      {isLoading ? (
-        <Grid container component="ul" p={0} gap={2}>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-            <Grid key={item}>
-              <Card component="li" sx={{ width: "300px" }}>
-                <CardContent>
-                  <Skeleton variant="text" animation="wave" />
-                </CardContent>
-                <CardActions>
-                  <Skeleton variant="text" width={60} animation="wave" />
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      ) : data && data.applications.length ? (
-        <ApplicationList applications={data.applications} />
+      {loadApplicationsResult.isLoading ? (
+        <ApplicationListSkeleton />
+      ) : loadApplicationsResult.data &&
+        loadApplicationsResult.data.applications.length ? (
+        <ApplicationList
+          applications={loadApplicationsResult.data.applications}
+        />
       ) : (
         <Typography variant="h5" align="center">
           No Applications
         </Typography>
       )}
 
-      {data ? (
+      {loadApplicationsResult.data &&
+      loadApplicationsResult.data.totalCount > pageSize ? (
         <Pagination
-          count={1}
-          page={1}
+          count={Math.ceil(loadApplicationsResult.data.totalCount / pageSize)}
+          page={pageNumber}
+          onChange={(_e, value) => setPageNumber(value)}
           variant="outlined"
           shape="rounded"
           sx={{ alignSelf: "center", mt: "auto" }}

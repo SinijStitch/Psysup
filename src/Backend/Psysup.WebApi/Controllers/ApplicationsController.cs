@@ -6,6 +6,7 @@ using Psysup.DataContracts.Application.GetApplications;
 using Psysup.Domain.Enums;
 using Psysup.Domain.Features.Application.Commands.ApplyDoctor;
 using Psysup.Domain.Features.Application.Commands.CreateApplication;
+using Psysup.Domain.Features.Application.Commands.DeleteApplication;
 using Psysup.Domain.Features.Application.Queries.GetApplicationById;
 using Psysup.Domain.Features.Application.Queries.GetApplications;
 using Psysup.Domain.Features.Application.Queries.GetAppliedDoctors;
@@ -69,5 +70,20 @@ public class ApplicationsController : ApiControllerBase
         var query = new GetAppliedDoctorsQuery { UserId = UserId, ApplicationId = applicationId };
         var response = await _sender.Send(query);
         return Ok(response);
+    }
+
+    [PlatformAuthorize(Roles.Admin | Roles.User)]
+    [HttpDelete("{applicationId}")]
+    public async Task<IActionResult> DeleteApplicationAsync([FromRoute] Guid applicationId)
+    {
+        var command = new DeleteApplicationCommand
+        {
+            UserId = UserId,
+            Roles = UserRoles,
+            ApplicationId = applicationId
+        };
+
+        await _sender.Send(command);
+        return NoContent();
     }
 }

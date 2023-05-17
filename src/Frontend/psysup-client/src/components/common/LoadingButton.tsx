@@ -6,6 +6,17 @@ interface LoadingButtonProps extends React.PropsWithChildren {
   type?: "button" | "submit" | "reset" | undefined;
   fullWidth?: boolean;
   sx?: React.CSSProperties;
+  variant?: "text" | "outlined" | "contained";
+  disabled?: boolean;
+  color?:
+    | "inherit"
+    | "primary"
+    | "secondary"
+    | "success"
+    | "error"
+    | "info"
+    | "warning";
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const LoadingButton: React.FC<LoadingButtonProps> = ({
@@ -13,15 +24,21 @@ const LoadingButton: React.FC<LoadingButtonProps> = ({
   type,
   fullWidth,
   sx,
-  children
+  children,
+  variant = "contained",
+  disabled,
+  color,
+  onClick
 }) => {
   return (
     <Button
       type={type}
-      variant="contained"
+      variant={variant}
       fullWidth={fullWidth}
       sx={sx}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
+      color={color}
+      onClick={onClick}
     >
       {isLoading ? <CircularProgress size="24px" /> : children}
     </Button>

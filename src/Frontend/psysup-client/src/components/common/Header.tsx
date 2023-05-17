@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "redux/api/authApiSlice";
 import TopBarProgress from "react-topbar-progress-indicator";
 import { useGetProfileQuery } from "redux/api/profileApiSlice";
-import { RouteConstants } from "enums/RouteConstants";
+import { ERoute } from "enums/ERoute";
 import ThemeToggler from "./ThemeToggler";
 import UserAvatar from "components/profile/UserAvatar";
 
@@ -53,7 +53,7 @@ const Header: React.FC = () => {
             flexGrow: 1,
             cursor: "pointer"
           }}
-          onClick={() => navigate(RouteConstants.APPLICATIONS)}
+          onClick={() => navigate(ERoute.APPLICATIONS)}
         >
           Psysup
         </Typography>
@@ -72,7 +72,7 @@ const Header: React.FC = () => {
         >
           <MenuItem
             onClick={() => {
-              navigate(RouteConstants.PROFILE);
+              navigate(ERoute.PROFILE);
               handleClose();
             }}
           >

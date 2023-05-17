@@ -15,13 +15,13 @@ import { useAppSelector } from "redux/hooks";
 import { selectMode } from "redux/globalSlice";
 
 import "react-toastify/dist/ReactToastify.css";
-import PrivateRoute from "components/routes/PrivateRoute";
-import PublicRoute from "components/routes/PublicRoute";
 import CategoriesPage from "pages/categories/CategoriesPage";
 import UsersPage from "pages/users/UsersPage";
-import { RouteConstants } from "enums/RouteConstants";
+import { ERoute } from "enums/ERoute";
 import AuthLayout from "layouts/AuthLayout";
 import AddApplicationPage from "pages/applications/AddApplicationPage";
+import ProtectedRoute from "components/routes/ProtectedRoute";
+import { ERole } from "enums/ERole";
 
 TopBarProgress.config({});
 
@@ -36,47 +36,54 @@ const App: React.FC = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/">
-            <Route element={<PrivateRoute />}>
-              <Route element={<MainLayout />}>
+            <Route element={<MainLayout />}>
+              <Route index element={<Navigate to={ERoute.APPLICATIONS} />} />
+
+              <Route element={<ProtectedRoute auth />}>
                 <Route
-                  index
-                  element={<Navigate to={RouteConstants.APPLICATIONS} />}
-                />
-                <Route
-                  path={RouteConstants.APPLICATIONS}
+                  path={ERoute.APPLICATIONS}
                   element={<ApplicationListPage />}
                 />
+              </Route>
+
+              <Route element={<ProtectedRoute auth />}>
                 <Route
-                  path={RouteConstants.APPLICATION}
+                  path={ERoute.APPLICATION}
                   element={<ApplicationPage />}
                 />
+              </Route>
+
+              <Route element={<ProtectedRoute auth />}>
                 <Route
-                  path={RouteConstants.ADD_APPLICATION}
+                  path={ERoute.ADD_APPLICATION}
                   element={<AddApplicationPage />}
                 />
-                <Route
-                  path={RouteConstants.CATEGORIES}
-                  element={<CategoriesPage />}
-                />
-                <Route path={RouteConstants.USERS} element={<UsersPage />} />
-                <Route
-                  path={RouteConstants.PROFILE}
-                  element={<ProfilePage />}
-                />
-                <Route
-                  path={RouteConstants.SETTINGS}
-                  element={<SettingsPage />}
-                />
+              </Route>
+
+              <Route element={<ProtectedRoute auth allowedRoles={[ERole.Admin]} />}>
+                <Route path={ERoute.CATEGORIES} element={<CategoriesPage />} />
+              </Route>
+
+              <Route element={<ProtectedRoute auth allowedRoles={[ERole.Admin]}/>}>
+                <Route path={ERoute.USERS} element={<UsersPage />} />
+              </Route>
+
+              <Route element={<ProtectedRoute auth />}>
+                <Route path={ERoute.PROFILE} element={<ProfilePage />} />
+              </Route>
+
+              <Route element={<ProtectedRoute auth />}>
+                <Route path={ERoute.SETTINGS} element={<SettingsPage />} />
               </Route>
             </Route>
 
-            <Route element={<PublicRoute />}>
-              <Route element={<AuthLayout />}>
-                <Route path={RouteConstants.LOGIN} element={<LoginPage />} />
-                <Route
-                  path={RouteConstants.REGISTER}
-                  element={<RegisterPage />}
-                />
+            <Route element={<AuthLayout />}>
+              <Route element={<ProtectedRoute />}>
+                <Route path={ERoute.LOGIN} element={<LoginPage />} />
+              </Route>
+
+              <Route element={<ProtectedRoute />}>
+                <Route path={ERoute.REGISTER} element={<RegisterPage />} />
               </Route>
             </Route>
 
