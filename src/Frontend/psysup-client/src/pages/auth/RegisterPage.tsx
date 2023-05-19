@@ -1,7 +1,7 @@
-import AuthForm from "components/auth/AuthForm";
+import RegisterForm from "components/auth/RegisterForm";
 import React from "react";
 import { useRegisterMutation } from "redux/api/authApiSlice";
-import { AuthFormData } from "types/auth/FormData";
+import { AuthFormData } from "types/auth/AuthFormData";
 
 const RegisterPage: React.FC = () => {
   const [register, { isLoading }] = useRegisterMutation();
@@ -10,15 +10,7 @@ const RegisterPage: React.FC = () => {
     register(data);
   };
 
-  return (
-    <AuthForm
-      title="Register"
-      linkPath="/login"
-      linkText="Do you have an account?"
-      isLoading={isLoading}
-      onSubmit={onSubmit}
-    />
-  );
+  return <RegisterForm isLoading={isLoading} onSubmit={onSubmit} />;
 };
 
 export default RegisterPage;

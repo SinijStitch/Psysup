@@ -4,11 +4,9 @@ using Psysup.Domain.Enums;
 
 namespace Psysup.Domain.Features.Application.Queries.GetApplications;
 
-public class GetApplicationsQuery : IRequest<GetApplicationsResponse>
+public class GetApplicationsQuery : PageQuery, IRequest<GetApplicationsResponse>
 {
     public Guid UserId { get; set; }
     public Roles Roles { get; set; }
     public bool IsPublic { get; set; }
-    public int PageSize { get; set; }
-    public int PageNumber { get; set; }
 }

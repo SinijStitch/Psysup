@@ -1,8 +1,10 @@
 import {
   AppBar,
+  Box,
   Button,
   Menu,
   MenuItem,
+  Stack,
   Toolbar,
   Typography
 } from "@mui/material";
@@ -29,7 +31,7 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <TopBarProgress />;
   }
 
@@ -60,8 +62,13 @@ const Header: React.FC = () => {
 
         <ThemeToggler />
 
+        <Box mr={1}/>
+
         <Button size="small" onClick={handleMenu} color="inherit">
-          <UserAvatar />
+          <Stack direction="row" useFlexGap spacing={1} alignItems="center">
+            <Typography>{`${data.firstName} ${data.lastName}`}</Typography>
+            <UserAvatar />
+          </Stack>
         </Button>
         <Menu
           id="menu-appbar"

@@ -7,12 +7,13 @@ export const profileApiSlice = apiSlice.injectEndpoints({
       query: () => "/profile",
       providesTags: ["User"]
     }),
-    updateProfile : builder.mutation<void, FormData>({
+    updateProfile: builder.mutation<void, FormData>({
       query: (body) => ({
         url: "/profile",
         method: "PUT",
         body
-      })
+      }),
+      invalidatesTags: ["User"]
     })
   })
 });

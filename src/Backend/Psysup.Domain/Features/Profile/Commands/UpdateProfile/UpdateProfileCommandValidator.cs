@@ -9,5 +9,7 @@ public class UpdateProfileCommandValidator : AbstractValidator<UpdateProfileComm
         RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.Email).EmailAddress();
         RuleFor(x => x.NewPassword).MinimumLength(2);
+        RuleFor(x => x.FirstName).MinimumLength(2).MaximumLength(100);
+        RuleFor(x => x.LastName).MinimumLength(2).MaximumLength(100);
     }
 }

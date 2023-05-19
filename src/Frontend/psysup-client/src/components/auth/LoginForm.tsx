@@ -8,7 +8,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouteLink } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AuthFormData } from "types/auth/FormData";
+import { AuthFormData } from "types/auth/AuthFormData";
 import * as yup from "yup";
 import FormInput from "../common/FormInput";
 import LoadingButton from "components/common/LoadingButton";

@@ -26,12 +26,16 @@ import FormInput from "components/common/FormInput";
 interface ProfileFormData {
   email?: string;
   password?: string;
+  firstName?: string;
+  lastName?: string;
   imagePath?: string;
 }
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
-  password: yup.string().notRequired()
+  password: yup.string().notRequired(),
+  firstName: yup.string().min(1).max(100).required().label('First Name'),
+  lastName: yup.string().min(1).max(100).required().label('Last Name')
 });
 
 const ProfilePage: React.FC = () => {
@@ -50,6 +54,8 @@ const ProfilePage: React.FC = () => {
     resolver: yupResolver(schema),
     defaultValues: {
       email: data?.email,
+      firstName: data?.firstName,
+      lastName: data?.lastName,
       imagePath: `${process.env.REACT_APP_BASE_URL}/${data?.imagePath}?${imageUniqueId}`
     }
   });
@@ -69,6 +75,14 @@ const ProfilePage: React.FC = () => {
 
     if (requestData.password) {
       formData.append("newPassword", requestData.password);
+    }
+
+    if (requestData.firstName) {
+      formData.append("firstName", requestData.firstName);
+    }
+
+    if (requestData.lastName) {
+      formData.append("lastName", requestData.lastName);
     }
 
     if (selectedImage) {
@@ -91,7 +105,7 @@ const ProfilePage: React.FC = () => {
   return (
     <Stack spacing={5} height="100%">
       <PageTitle text="Profile" />
-      <Paper component={Box} p={5} alignSelf="center" minWidth="500px">
+      <Paper component={Box} p={5} alignSelf="center" width="600px">
         <Stack
           component="form"
           onSubmit={handleFormSubmit}
@@ -120,6 +134,23 @@ const ProfilePage: React.FC = () => {
                 onChange={handleImagePreview}
               />
             </Button>
+          </Stack>
+
+          <Stack direction="row" useFlexGap spacing={2} width="100%">
+            <FormInput
+              name="firstName"
+              type="text"
+              label="First Name"
+              control={control}
+              fieldError={errors?.firstName}
+            />
+            <FormInput
+              name="lastName"
+              type="text"
+              label="Last Name"
+              control={control}
+              fieldError={errors?.lastName}
+            />
           </Stack>
 
           <FormInput

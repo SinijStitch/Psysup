@@ -1,6 +1,6 @@
-﻿namespace Psysup.DataContracts.Profile.GetProfile;
+﻿namespace Psysup.DataContracts.Users.GetUsers;
 
-public class GetProfileResponse
+public class GetUsersResponseItem
 {
     public Guid Id { get; set; }
     public string Email { get; set; } = string.Empty;

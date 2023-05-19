@@ -25,11 +25,26 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand>
     public async Task Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
         var user = await FindUserOrThrowExceptionAsync(request, cancellationToken);
+
+        SetUserName(request, user);
         SetEmailIfExists(request, user);
         SetNewPasswordIfExists(request, user);
         await SetImageIfExistsAsync(request, user, cancellationToken);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private static void SetUserName(UpdateProfileCommand request, User user)
+    {
+        if (request.FirstName != null)
+        {
+            user.FirstName = request.FirstName;
+        }
+
+        if (request.LastName != null)
+        {
+            user.LastName = request.LastName;
+        }
     }
 
     private async Task SetImageIfExistsAsync(

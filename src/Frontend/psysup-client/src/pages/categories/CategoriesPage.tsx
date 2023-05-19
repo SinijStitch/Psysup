@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   List,
   ListItem,
   ListItemText,
@@ -58,7 +57,7 @@ const CategoriesPage: React.FC = () => {
     <Stack useFlexGap gap={5}>
       <PageTitle text="Categories" />
 
-      <Paper component={Box} p={5} alignSelf="center" minWidth="800px">
+      <Paper component={Box} p={5} alignSelf="center" minWidth="600px">
         <Stack useFlexGap spacing={2}>
           <TextField
             fullWidth
