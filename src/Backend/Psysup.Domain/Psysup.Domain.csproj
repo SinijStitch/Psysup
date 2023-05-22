@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Psysup.DataContracts\Psysup.DataContracts.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Users\Commands\" />
-  </ItemGroup>
-
 </Project>

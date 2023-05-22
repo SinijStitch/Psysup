@@ -5,6 +5,7 @@ export enum ERoute {
   CATEGORIES = "/categories",
   CATEGORY = "/categories/:id",
   USERS = "/users",
+  USER = "/users/:id",
   PROFILE = "/profile",
   SETTINGS = "/settings",
   LOGIN = "/login",
