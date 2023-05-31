@@ -15,4 +15,5 @@ public class Application
 
     public IEnumerable<Category>? Categories { get; set; }
     public IEnumerable<AppliedDoctorApplication>? AppliedDoctorApplications { get; set; }
+    public IEnumerable<Chat>? Chats { get; set; }
 }

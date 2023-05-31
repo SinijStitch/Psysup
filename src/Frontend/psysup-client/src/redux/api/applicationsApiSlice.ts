@@ -6,7 +6,7 @@ import CreateApplicationRequest from "types/applications/CreateApplicationReques
 
 export const applicationsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getApplications: builder.query<
+    getOwnApplications: builder.query<
       GetApplicationsResponse,
       GetApplicationsRequest
     >({
@@ -18,12 +18,53 @@ export const applicationsApiSlice = apiSlice.injectEndpoints({
         result
           ? [
               ...result.applications.map(({ id }) => ({
-                type: "Application" as const,
+                type: "OwnApplication" as const,
                 id
               })),
-              { type: "Application", id: "LIST" }
+              { type: "OwnApplication", id: "LIST" }
             ]
-          : [{ type: "Application", id: "LIST" }]
+          : [{ type: "OwnApplication", id: "LIST" }],
+      keepUnusedDataFor: 3600
+    }),
+    getPublicApplications: builder.query<
+      GetApplicationsResponse,
+      GetApplicationsRequest
+    >({
+      query: (request) => ({
+        url: ERoute.APPLICATIONS_PUBLIC,
+        params: request
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.applications.map(({ id }) => ({
+                type: "PublicApplication" as const,
+                id
+              })),
+              { type: "PublicApplication", id: "LIST" }
+            ]
+          : [{ type: "PublicApplication", id: "LIST" }],
+      keepUnusedDataFor: 3600
+    }),
+    getAppliedApplications: builder.query<
+      GetApplicationsResponse,
+      GetApplicationsRequest
+    >({
+      query: (request) => ({
+        url: ERoute.APPLICATIONS_APPLIED,
+        params: request
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.applications.map(({ id }) => ({
+                type: "AppliedApplication" as const,
+                id
+              })),
+              { type: "AppliedApplication", id: "LIST" }
+            ]
+          : [{ type: "AppliedApplication", id: "LIST" }],
+      keepUnusedDataFor: 3600
     }),
     createApplication: builder.mutation<void, CreateApplicationRequest>({
       query: (body) => ({
@@ -31,7 +72,7 @@ export const applicationsApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body
       }),
-      invalidatesTags: [{ type: "Application", id: "LIST" }]
+      invalidatesTags: [{ type: "OwnApplication", id: "LIST" }]
     }),
     deleteApplication: builder.mutation<void, string>({
       query: (id) => ({
@@ -39,15 +80,28 @@ export const applicationsApiSlice = apiSlice.injectEndpoints({
         method: "DELETE"
       }),
       invalidatesTags: (_result, _error, arg) => [
-        { type: "Application", id: arg }
+        { type: "OwnApplication", id: arg },
+        { type: "PublicApplication", id: arg }
+      ]
+    }),
+    applyApplication: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/applications/apply/${id}`,
+        method: "POST"
+      }),
+      invalidatesTags: () => [
+        { type: "AppliedApplication", id: "LIST" },
+        { type: "PublicApplication", id: "LIST" }
       ]
     })
   })
 });
 
 export const {
-  useGetApplicationsQuery,
-  useLazyGetApplicationsQuery,
+  useLazyGetOwnApplicationsQuery,
+  useLazyGetPublicApplicationsQuery,
+  useLazyGetAppliedApplicationsQuery,
   useCreateApplicationMutation,
-  useDeleteApplicationMutation
+  useDeleteApplicationMutation,
+  useApplyApplicationMutation
 } = applicationsApiSlice;

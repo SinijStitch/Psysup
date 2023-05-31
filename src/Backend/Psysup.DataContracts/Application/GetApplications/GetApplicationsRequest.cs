@@ -2,5 +2,4 @@
 
 public class GetApplicationsRequest : PageRequest
 {
-    public bool IsPublic { get; set; }
 }

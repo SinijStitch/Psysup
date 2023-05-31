@@ -5,6 +5,6 @@ export const apiSlice = createApi({
     baseUrl: process.env.REACT_APP_BASE_URL,
     credentials: "include"
   }),
-  tagTypes: ["User", "Application", "Category"],
+  tagTypes: ["User", "OwnApplication", "PublicApplication", "AppliedApplication", "Category"],
   endpoints: () => ({})
 });

@@ -29,6 +29,11 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
             .WithMany(x => x.Users)
             .UsingEntity<RoleUser>();
 
+        builder
+            .HasMany(x => x.Chats)
+            .WithMany(x => x.Users)
+            .UsingEntity<ChatUser>();
+
         builder.HasData(new User
         {
             Id = Guid.Parse("FDA48C05-48B8-4655-B1E5-F0D707568EE3"),

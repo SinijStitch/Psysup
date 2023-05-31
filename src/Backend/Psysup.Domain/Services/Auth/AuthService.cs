@@ -34,11 +34,17 @@ public class AuthService : IAuthService
         var identity = new ClaimsIdentity(claims, CookieConstants.CookieScheme, "id", "role");
         var principle = new ClaimsPrincipal(identity);
 
-        await _contextAccessor.HttpContext.SignInAsync(CookieConstants.CookieScheme, principle);
+        if (_contextAccessor.HttpContext != null)
+        {
+            await _contextAccessor.HttpContext.SignInAsync(CookieConstants.CookieScheme, principle);
+        }
     }
 
     public async Task SignOutAsync()
     {
-        await _contextAccessor.HttpContext.SignOutAsync(CookieConstants.CookieScheme);
+        if (_contextAccessor.HttpContext != null)
+        {
+            await _contextAccessor.HttpContext.SignOutAsync(CookieConstants.CookieScheme);
+        }
     }
 }

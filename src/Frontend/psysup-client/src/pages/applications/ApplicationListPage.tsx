@@ -1,33 +1,46 @@
-import {
-  Button,
-  Pagination,
-  Stack,
-  TextField,
-  Typography
-} from "@mui/material";
-import ApplicationList from "components/applications/ApplicationList";
-import ApplicationListSkeleton from "components/applications/ApplicationListSkeleton";
+import { Box, Button, Stack, Tab, Tabs, TextField } from "@mui/material";
+import AppliedApplicationList from "components/applications/AppliedApplicationList";
+import OwnApplicationList from "components/applications/OwnApplicationList";
+import PublicApplicationList from "components/applications/PublicApplicationList";
 import PageTitle from "components/common/PageTitle";
+import { ERole } from "enums/ERole";
 import { ERoute } from "enums/ERoute";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useLazyGetApplicationsQuery } from "redux/api/applicationsApiSlice";
+import TopBarProgress from "react-topbar-progress-indicator";
+import { useGetProfileQuery } from "redux/api/profileApiSlice";
 
-const pageSize = 12;
+enum ETab {
+  MyApplications = "MyApplications",
+  PublicApplications = "PublicApplications",
+  AppliedApplications = "AppliedApplications"
+}
 
 const ApplicationListPage: React.FC = () => {
   const navigate = useNavigate();
-  const [pageNumber, setPageNumber] = React.useState<number>(1);
-  const [loadApplications, loadApplicationsResult] =
-    useLazyGetApplicationsQuery();
+  const { data } = useGetProfileQuery();
+  const [selectedTab, setSelectedTab] = React.useState<ETab>();
+
+  const handleChange = (_: React.SyntheticEvent, newTab: ETab) => {
+    setSelectedTab(newTab);
+  };
 
   React.useEffect(() => {
-    loadApplications({
-      isPublic: false,
-      pageSize,
-      pageNumber
-    });
-  }, [loadApplications, pageNumber]);
+    if (data) {
+      if (data.roles.includes(ERole.User)) {
+        setSelectedTab(ETab.MyApplications);
+      } else if (
+        data.roles.includes(ERole.Doctor) ||
+        data.roles.includes(ERole.Admin)
+      ) {
+        setSelectedTab(ETab.PublicApplications);
+      }
+    }
+  }, [data]);
+
+  if (!data) {
+    return <TopBarProgress />;
+  }
 
   return (
     <Stack height="100%" gap={2}>
@@ -40,39 +53,46 @@ const ApplicationListPage: React.FC = () => {
           variant="standard"
         />
 
-        <Button
-          variant="contained"
-          onClick={() => navigate(ERoute.ADD_APPLICATION)}
-          sx={{ minWidth: "158px" }}
-        >
-          Add Application
-        </Button>
+        {data.roles.includes(ERole.User) && (
+          <Button
+            variant="contained"
+            onClick={() => navigate(ERoute.ADD_APPLICATION)}
+            sx={{ minWidth: "158px" }}
+          >
+            Add Application
+          </Button>
+        )}
       </Stack>
 
-      {loadApplicationsResult.isLoading ? (
-        <ApplicationListSkeleton />
-      ) : loadApplicationsResult.data &&
-        loadApplicationsResult.data.applications.length ? (
-        <ApplicationList
-          applications={loadApplicationsResult.data.applications}
-        />
-      ) : (
-        <Typography variant="h5" align="center">
-          No Applications
-        </Typography>
+      {selectedTab && (
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={selectedTab}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            {data.roles.includes(ERole.User) && (
+              <Tab label="My Applications" value={ETab.MyApplications} />
+            )}
+
+            {(data.roles.includes(ERole.Doctor) ||
+              data.roles.includes(ERole.Admin)) && (
+              <Tab label="Public Applictions" value={ETab.PublicApplications} />
+            )}
+
+            {data.roles.includes(ERole.Doctor) && (
+              <Tab
+                label="Applied Applictions"
+                value={ETab.AppliedApplications}
+              />
+            )}
+          </Tabs>
+        </Box>
       )}
 
-      {loadApplicationsResult.data &&
-      loadApplicationsResult.data.totalCount > pageSize ? (
-        <Pagination
-          count={Math.ceil(loadApplicationsResult.data.totalCount / pageSize)}
-          page={pageNumber}
-          onChange={(_e, value) => setPageNumber(value)}
-          variant="outlined"
-          shape="rounded"
-          sx={{ alignSelf: "center", mt: "auto" }}
-        />
-      ) : null}
+      {selectedTab === ETab.MyApplications && <OwnApplicationList />}
+      {selectedTab === ETab.PublicApplications && <PublicApplicationList />}
+      {selectedTab === ETab.AppliedApplications && <AppliedApplicationList />}
     </Stack>
   );
 };

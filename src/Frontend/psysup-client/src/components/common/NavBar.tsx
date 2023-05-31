@@ -18,6 +18,8 @@ import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import GroupIcon from "@mui/icons-material/Group";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
+import CommentIcon from '@mui/icons-material/Comment';
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import { useLocation, useNavigate } from "react-router-dom";
 import { ERoute } from "enums/ERoute";
 import { useLogoutMutation } from "redux/api/authApiSlice";
@@ -39,6 +41,12 @@ const menuItems: (NavItem | null)[] = [
     path: ERoute.APPLICATIONS,
     icon: <FeaturedPlayListOutlinedIcon />,
     selectedIcon: <FeaturedPlayListIcon />
+  },
+  {
+    label: "Messages",
+    path: ERoute.MESSAGES,
+    icon: <CommentOutlinedIcon />,
+    selectedIcon: <CommentIcon />
   },
   {
     label: "Categories",

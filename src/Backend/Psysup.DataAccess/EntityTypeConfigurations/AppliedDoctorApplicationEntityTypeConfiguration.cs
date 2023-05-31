@@ -15,13 +15,11 @@ public class AppliedDoctorApplicationEntityTypeConfiguration : IEntityTypeConfig
         builder
             .HasOne(x => x.Doctor)
             .WithMany(x => x.DoctorApplications)
-            .HasForeignKey(x => x.DoctorId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey(x => x.DoctorId);
 
         builder
             .HasOne(x => x.Application)
             .WithMany(x => x.AppliedDoctorApplications)
-            .HasForeignKey(x => x.ApplicationId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey(x => x.ApplicationId);
     }
 }

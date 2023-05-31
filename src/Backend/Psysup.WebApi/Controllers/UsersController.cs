@@ -34,7 +34,7 @@ public class UsersController : ApiControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> GetUsersAsync(Guid id)
+    public async Task<IActionResult> DeleteUserAsync(Guid id)
     {
         var command = new DeleteUserCommand { Id = id };
         await _sender.Send(command);

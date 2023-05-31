@@ -12,6 +12,9 @@ public interface IPsysupDbContext : IDisposable, IAsyncDisposable
     DbSet<AppliedDoctorApplication> AppliedDoctorApplications { get; }
     DbSet<Category> Categories { get; }
     DbSet<ApplicationCategory> ApplicationCategories { get; }
+    DbSet<Chat> Chats { get; }
+    DbSet<Message> Messages { get; }
+    DbSet<ChatUser> ChatUsers { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

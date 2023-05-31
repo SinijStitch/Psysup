@@ -3,7 +3,7 @@ import PageTitle from "components/common/PageTitle";
 import { ERoute } from "enums/ERoute";
 import React from "react";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useGetCategoriesQuery } from "redux/api/categoriesApiSlice";
 import TopBarProgress from "react-topbar-progress-indicator";
 import * as yup from "yup";

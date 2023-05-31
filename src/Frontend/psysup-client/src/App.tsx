@@ -22,6 +22,7 @@ import AuthLayout from "layouts/AuthLayout";
 import AddApplicationPage from "pages/applications/AddApplicationPage";
 import ProtectedRoute from "components/routes/ProtectedRoute";
 import { ERole } from "enums/ERole";
+import MessagesPage from "pages/messages/MessagesPage";
 
 TopBarProgress.config({});
 
@@ -53,6 +54,17 @@ const App: React.FC = () => {
                 />
               </Route>
 
+              <Route
+                element={
+                  <ProtectedRoute
+                    auth
+                    allowedRoles={[ERole.Doctor, ERole.User]}
+                  />
+                }
+              >
+                <Route path={ERoute.MESSAGES} element={<MessagesPage />} />
+              </Route>
+
               <Route element={<ProtectedRoute auth />}>
                 <Route
                   path={ERoute.ADD_APPLICATION}
@@ -60,11 +72,15 @@ const App: React.FC = () => {
                 />
               </Route>
 
-              <Route element={<ProtectedRoute auth allowedRoles={[ERole.Admin]} />}>
+              <Route
+                element={<ProtectedRoute auth allowedRoles={[ERole.Admin]} />}
+              >
                 <Route path={ERoute.CATEGORIES} element={<CategoriesPage />} />
               </Route>
 
-              <Route element={<ProtectedRoute auth allowedRoles={[ERole.Admin]}/>}>
+              <Route
+                element={<ProtectedRoute auth allowedRoles={[ERole.Admin]} />}
+              >
                 <Route path={ERoute.USERS} element={<UsersPage />} />
               </Route>
 

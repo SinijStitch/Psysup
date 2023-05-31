@@ -3,9 +3,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Psysup.DataContracts.Categories.CreateCategory;
 using Psysup.Domain.Enums;
-using Psysup.Domain.Features.Category.Commands.CreateCategory;
-using Psysup.Domain.Features.Category.Commands.DeleteCategory;
-using Psysup.Domain.Features.Category.Queries.GetCategories;
+using Psysup.Domain.Features.Categories.Commands.CreateCategory;
+using Psysup.Domain.Features.Categories.Commands.DeleteCategory;
+using Psysup.Domain.Features.Categories.Queries.GetCategories;
 using Psysup.WebApi.Filters;
 
 namespace Psysup.WebApi.Controllers;

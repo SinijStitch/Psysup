@@ -39,14 +39,14 @@ public abstract class ApiControllerBase : ControllerBase
                 return _roles.Value;
             }
 
-            var value = HttpContext.User.FindFirstValue("role");
+            var roleClaims = HttpContext.User.FindAll("role").ToList();
 
-            if (value == null)
+            if (roleClaims.Count == 0)
             {
-                throw new InvalidOperationException("Role was not found");
+                throw new InvalidOperationException("Roles were not found");
             }
 
-            _roles = Enum.Parse<Roles>(value);
+            _roles = Enum.Parse<Roles>(string.Join(",", roleClaims.Select(roleClaim => roleClaim.Value)));
 
             return _roles.Value;
         }

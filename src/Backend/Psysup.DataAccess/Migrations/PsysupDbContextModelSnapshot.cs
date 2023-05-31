@@ -117,6 +117,61 @@ namespace Psysup.DataAccess.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Psysup.DataAccess.Models.Chat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("Psysup.DataAccess.Models.ChatUser", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "ChatId");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("ChatUsers");
+                });
+
+            modelBuilder.Entity("Psysup.DataAccess.Models.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("Psysup.DataAccess.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -260,13 +315,13 @@ namespace Psysup.DataAccess.Migrations
                     b.HasOne("Psysup.DataAccess.Models.Application", "Application")
                         .WithMany("AppliedDoctorApplications")
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Psysup.DataAccess.Models.User", "Doctor")
                         .WithMany("DoctorApplications")
                         .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Application");
@@ -274,16 +329,57 @@ namespace Psysup.DataAccess.Migrations
                     b.Navigation("Doctor");
                 });
 
+            modelBuilder.Entity("Psysup.DataAccess.Models.Chat", b =>
+                {
+                    b.HasOne("Psysup.DataAccess.Models.Application", "Application")
+                        .WithMany("Chats")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+                });
+
+            modelBuilder.Entity("Psysup.DataAccess.Models.ChatUser", b =>
+                {
+                    b.HasOne("Psysup.DataAccess.Models.Chat", "Chat")
+                        .WithMany()
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Psysup.DataAccess.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Psysup.DataAccess.Models.Message", b =>
+                {
+                    b.HasOne("Psysup.DataAccess.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+                });
+
             modelBuilder.Entity("Psysup.DataAccess.Models.RoleUser", b =>
                 {
                     b.HasOne("Psysup.DataAccess.Models.Role", "Role")
-                        .WithMany("RoleUsers")
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Psysup.DataAccess.Models.User", "User")
-                        .WithMany("RoleUsers")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -296,11 +392,13 @@ namespace Psysup.DataAccess.Migrations
             modelBuilder.Entity("Psysup.DataAccess.Models.Application", b =>
                 {
                     b.Navigation("AppliedDoctorApplications");
+
+                    b.Navigation("Chats");
                 });
 
-            modelBuilder.Entity("Psysup.DataAccess.Models.Role", b =>
+            modelBuilder.Entity("Psysup.DataAccess.Models.Chat", b =>
                 {
-                    b.Navigation("RoleUsers");
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Psysup.DataAccess.Models.User", b =>
@@ -308,8 +406,6 @@ namespace Psysup.DataAccess.Migrations
                     b.Navigation("Applications");
 
                     b.Navigation("DoctorApplications");
-
-                    b.Navigation("RoleUsers");
                 });
 #pragma warning restore 612, 618
         }
